@@ -1,0 +1,18 @@
+<div>
+  <h2>Add a new note</h2>
+  <note [editable]="true" />
+</div>
+
+<div>
+  <h2>Here come notes</h2>
+  <div class="notes_grid">
+  @for (n of notes; track n.id)  {
+    <note #xyz [note]=n [style.visibility]="xyz.visibleProp? 'normal' : 'hidden'" />
+  } @empty {
+    <p> no notes, sorry </p>
+}
+  </div>
+</div>
+
+<router-outlet />
+

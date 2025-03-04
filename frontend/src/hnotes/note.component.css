@@ -1,0 +1,28 @@
+:host {
+}
+
+div {
+  border-style: solid;
+  width: 200px;
+  padding: 10px;
+  // margin: 10px;
+  border-radius: 25px;
+
+  background: yellow;
+}
+
+div input {
+  width: 95%;
+}
+
+div textarea {
+  width: 95%;
+}
+
+div button {
+  margin-top: 10px;
+}
+
+.editable {
+  background: blue
+}

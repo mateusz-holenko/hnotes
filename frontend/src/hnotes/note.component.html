@@ -1,0 +1,19 @@
+@if (!editable) {
+<div>
+  <h1>{{ note.title }}</h1>
+  <p>{{ note.content }}</p>
+  <button (click)="edit()">edit</button>
+  <button (click)="remove()">remove</button>
+</div>
+}
+@else {
+<div class="editable">
+  <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+    <label for="title">Title: </label>
+    <input id="title" type="text" formControlName="title">
+    <label for="content">Content: </label>
+    <textarea id="content" formControlName="content" rows="10"></textarea>
+    <button type="submit">Submit</button>
+  </form>
+</div>
+}
