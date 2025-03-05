@@ -20,6 +20,8 @@ import org.springframework.http.HttpStatus;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.slf4j.LoggerFactory;
+
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
 public class NotesRestController {
@@ -47,7 +49,11 @@ public class NotesRestController {
 
     @GetMapping("/notes")
     public Iterable<Note> getNotes(Principal p, @RequestParam(value = "limit", defaultValue = "") String limit) {
+      var logger = LoggerFactory.getLogger(NotesRestController.class);
+
       var name = p.getName();
+      logger.error("Principal name: " + name);
+      
       // TODO: implement the limit support
       return notesRepository.findAll();
     }
