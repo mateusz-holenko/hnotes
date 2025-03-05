@@ -1,6 +1,7 @@
 package houen.hnotes;
 
 import java.util.ArrayList;
+import java.security.Principal;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -45,7 +46,8 @@ public class NotesRestController {
     }
 
     @GetMapping("/notes")
-    public Iterable<Note> getNotes(@RequestParam(value = "limit", defaultValue = "") String limit) {
+    public Iterable<Note> getNotes(Principal p, @RequestParam(value = "limit", defaultValue = "") String limit) {
+      var name = p.getName();
       // TODO: implement the limit support
       return notesRepository.findAll();
     }
