@@ -1,0 +1,13 @@
+<form [formGroup]="loginForm">
+  <fieldset>
+    <legend>Login</legend>
+
+    <label>Name:</label>
+    <input formControllerName="handle">
+
+    <label>Password:</label>
+    <input formControllerName="password" type="password">
+    <br />
+    <button (click)="doLogin()">Login</button>
+  </fieldset>
+</form>
