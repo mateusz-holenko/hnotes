@@ -51,8 +51,10 @@ public class NotesRestController {
     public Iterable<Note> getNotes(Principal p, @RequestParam(value = "limit", defaultValue = "") String limit) {
       var logger = LoggerFactory.getLogger(NotesRestController.class);
 
-      var name = p.getName();
-      logger.error("Principal name: " + name);
+      if(p != null) {
+        var name = p.getName();
+        logger.error("Principal name: " + name);
+      }
       
       // TODO: implement the limit support
       return notesRepository.findAll();
