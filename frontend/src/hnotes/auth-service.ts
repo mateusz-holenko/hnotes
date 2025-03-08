@@ -22,6 +22,10 @@ export class AuthService {
     return this.jwt;
   }
 
+  logout() {
+    this.jwt = '';
+  }
+
   constructor(private http: HttpClient) {
   }
 }
