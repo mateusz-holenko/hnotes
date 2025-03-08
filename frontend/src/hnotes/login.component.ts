@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from './auth-service'
 
@@ -20,11 +21,14 @@ export class LoginComponent {
     this.authenticationService
       .login(creds.handle!, creds.password!)
       .subscribe(
-        () => { console.log("Successfull login"); },
-        err => { console.log("Login error"); }
+        x => {
+          console.log("Successfull login: " + x);
+          this.router.navigate(['/notes']);
+        },
+        err => { console.log("Login error: " + JSON.stringify(err)); }
       );
   }
 
-  constructor(private authenticationService : AuthService) {
+  constructor(private authenticationService : AuthService, private router: Router) {
   }
 }
