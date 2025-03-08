@@ -1,11 +1,10 @@
 import { HttpInterceptor, HttpRequest, HttpHandler } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { AuthService } from './auth-service';
 
-@Injectable()
 export class AuthenticationInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<any>, handler: HttpHandler) {
-    // TODO: obtain JWT value
-    var jwt = "";
+    var jwt = this.authService.getJWT();
     const requestWithJWT = request.clone({
       headers: request.headers
         .set('Authorization', `Bearer: ${jwt}`)
@@ -13,4 +12,7 @@ export class AuthenticationInterceptor implements HttpInterceptor {
 
     return handler.handle(requestWithJWT);
   }
+
+  constructor(private authService: AuthService) { }
+
 }

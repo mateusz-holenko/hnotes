@@ -6,8 +6,7 @@ import { AuthService } from './auth-service'
   selector: 'login',
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
-  imports: [ReactiveFormsModule],
-  providers: [AuthService]
+  imports: [ReactiveFormsModule]
 })
 export class LoginComponent {
   loginForm = new FormGroup({
