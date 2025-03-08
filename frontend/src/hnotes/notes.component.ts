@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { NoteComponent } from './note.component'
-import { LoginComponent } from './login.component'
-import { NoteResult } from './note-result'
+import { NoteComponent } from './note.component';
+import { LoginComponent } from './login.component';
+import { NoteResult } from './note-result';
 import { AuthService } from './auth-service';
 
 @Component({
