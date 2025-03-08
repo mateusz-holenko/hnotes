@@ -39,7 +39,7 @@ public class UsersRestController {
       var jws = Jwts.builder()
         .subject("Username")
         .setIssuedAt(new Date(currentTimestamp))
-        .setExpiration(new Date(currentTimestamp + 100000))
+        .setExpiration(new Date(currentTimestamp +  60 * 60 * 1000)) // 1h
         .signWith(SignatureAlgorithm.HS512, jwtKey.getBytes());
 
       return jws.compact();
