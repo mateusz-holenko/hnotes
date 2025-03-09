@@ -14,7 +14,6 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
 import javax.crypto.spec.SecretKeySpec;
 
@@ -29,12 +28,6 @@ public class SecurityConfig {
     var keyAsBytes = jwtKey.getBytes();
     var keySpec = new SecretKeySpec(keyAsBytes, 0, keyAsBytes.length, "RSA");
     return NimbusJwtDecoder.withSecretKey(keySpec).macAlgorithm(MacAlgorithm.HS512).build();
-  }
-
-  @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.csrf().disable();
-    return http.build();
   }
 
   @Bean
