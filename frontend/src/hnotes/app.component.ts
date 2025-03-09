@@ -3,10 +3,11 @@ import { RouterOutlet } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { NoteResult } from './note-result';
+import { HeaderComponent } from './header.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, HttpClientModule],
+  imports: [RouterOutlet, HttpClientModule, HeaderComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
