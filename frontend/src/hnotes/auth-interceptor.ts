@@ -7,7 +7,7 @@ export class AuthenticationInterceptor implements HttpInterceptor {
     var jwt = this.authService.getJWT();
     const requestWithJWT = request.clone({
       headers: request.headers
-        .set('Authorization', `Bearer: ${jwt}`)
+        .set('Authorization', `Bearer ${jwt}`)
     });
 
     return handler.handle(requestWithJWT);
