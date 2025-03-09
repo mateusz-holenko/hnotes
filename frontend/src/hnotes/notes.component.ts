@@ -5,7 +5,6 @@ import { NoteComponent } from './note.component';
 import { LoginComponent } from './login.component';
 import { NoteResult } from './note-result';
 import { NotesService } from './notes.service';
-import { AuthService } from './auth-service';
 
 @Component({
   selector: 'notes',
@@ -15,12 +14,6 @@ import { AuthService } from './auth-service';
 })
 export class NotesComponent implements OnInit {
   notes:any[] = [];
-
-  logout()
-  {
-    this.authService.logout();
-    this.router.navigate(['/login']);
-  }
 
   handleRemoveRequest(id: number) {
     console.log('Requested to remove note #' + id);
@@ -39,5 +32,5 @@ export class NotesComponent implements OnInit {
     this.notesService.getNotes().subscribe(notes => { this.notes = notes });
   }
 
-  constructor(private authService: AuthService, private notesService: NotesService, private router: Router) {}
+  constructor(private notesService: NotesService, private router: Router) {}
 }
