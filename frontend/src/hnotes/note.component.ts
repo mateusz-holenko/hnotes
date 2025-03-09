@@ -1,7 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { NoteResult } from './note-result'
+import { NoteResult } from './note-result';
+import { NotesService } from './notes.service';
 
 @Component({
   selector: 'note',
@@ -10,7 +11,7 @@ import { NoteResult } from './note-result'
   imports: [ReactiveFormsModule]
 })
 export class NoteComponent implements OnInit {
-  @Input() note: NoteResult = { id: -1, title: '', content: '' }
+  @Input() note: NoteResult = new NoteResult();
   visibleProp: boolean = true;
 
   @Input() editable: boolean = false;
@@ -19,20 +20,14 @@ export class NoteComponent implements OnInit {
     content: new FormControl('')
   })
 
+  @Output() removeRequestEvent = new EventEmitter();
+
   edit() {
     this.editable = true;
   }
 
   remove() {
-    if(this.note.id == 20) {
-      this.http.delete('http://localhost:8080/notes/10')
-        .subscribe(
-          () => { this.visibleProp = false; },
-          error => { this.note.title = 'ERROR!!!!'; })
-        
-    } else {
-      this.http.delete('http://localhost:8080/notes/' + this.note.id) .subscribe(() => { this.visibleProp = false; })
-    }
+    this.removeRequestEvent.emit();
   }
 
   ngOnInit(): void {
@@ -44,14 +39,17 @@ export class NoteComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.note.id == -1) {
-      this.http.post<any>('http://localhost:8080/notes', this.editForm.value).subscribe(() => { })
+    let n = Object.assign(new NoteResult(), this.editForm.value);
+
+    if (this.note.id == null) {
+      this.notesService.addNote(n).subscribe(() => { });
     } else {
-      this.http.put<any>('http://localhost:8080/notes/' + this.note.id, this.editForm.value).subscribe(() => { })
+      this.notesService.updateNote(this.note.id, n).subscribe(() => { });
+      this.note = n;
       this.editable = false;
     }
   }
 
-  constructor(private http : HttpClient) {
+  constructor(private http : HttpClient, private notesService: NotesService) {
   }
 }

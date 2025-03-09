@@ -8,7 +8,7 @@
   <h2>Here come notes</h2>
   <div class="notes_grid">
   @for (n of notes; track n.id)  {
-    <note #xyz [note]=n [style.visibility]="xyz.visibleProp? 'normal' : 'hidden'" />
+    <note (removeRequestEvent)="handleRemoveRequest(n.id)" [note]=n />
   } @empty {
     <p> no notes, sorry </p>
 }

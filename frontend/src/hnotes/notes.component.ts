@@ -22,6 +22,18 @@ export class NotesComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
+  handleRemoveRequest(id: number) {
+    console.log('Requested to remove note #' + id);
+    this.notesService.removeNote(id).subscribe(
+      () => {
+        var idx = this.notes.findIndex(n => n.id == id);
+        if(idx > -1) {
+          this.notes.splice(idx, 1);
+        }
+      }
+    );
+  }
+
   ngOnInit()
   {
     this.notesService.getNotes().subscribe(notes => { this.notes = notes });

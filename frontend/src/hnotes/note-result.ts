@@ -1,6 +1,6 @@
-export interface NoteResult
+export class NoteResult
 {
-  id:number,
-  title:string,
-  content:string
+  id?:number;
+  title:string = "";
+  content:string = "";
 }
