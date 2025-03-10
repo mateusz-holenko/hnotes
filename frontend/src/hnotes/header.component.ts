@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { NoteResult } from './note-result';
@@ -12,4 +12,9 @@ import { LoginStatusComponent } from './login-status.component';
   imports: [LoginStatusComponent]
 })
 export class HeaderComponent {
+  goHome() {
+    this.router.navigate(['/']);
+  }
+
+  constructor(private router: Router) {}
 }
