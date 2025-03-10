@@ -33,7 +33,7 @@ export class NotesComponent implements OnInit {
 
   ngOnInit()
   {
-    this.notesService.getNotes().subscribe(notes => { this.notes = notes });
+    this.notesService.getNotes().subscribe(notes => { this.notes = notes.sort(x => x.id ?? 0) });
   }
 
   constructor(private notesService: NotesService, private router: Router) {}
