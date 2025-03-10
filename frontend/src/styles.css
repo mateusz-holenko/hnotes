@@ -1,9 +1,27 @@
 /* You can add global styles to this file, and also import other style files */
 html {
-  background-color: #000425;
-  color: white;
+  background-color: #1f2023;
+  color: #e9e9e9;
+  font-family: "Roboto",arial,sans-serif;
+  font-size: 15px;
 }
 
 body {
   margin: 0px;
 }
+
+.container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.centered-containee {
+  margin: 0px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
