@@ -31,6 +31,10 @@ export class AuthService {
     return this.jwt != '';
   }
 
+  getName() {
+    return '[unknown]';
+  }
+
   logout() {
     this.jwt = '';
     this.statusSource.next('logged-out');

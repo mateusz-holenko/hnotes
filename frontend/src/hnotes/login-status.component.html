@@ -1,6 +1,5 @@
 @if(loggedIn) {
-  <p>Logged in as XYZ</p>
-  <a href="javascript:void(0)" (click)="logout()">Log out!</a>
+  <div>Logged as {{name}}, <a href="javascript:void(0)" (click)="logout()">log out</a></div>
 } @else {
   <a href="javascript:void(0)" (click)="login()">Log in!</a>
 }

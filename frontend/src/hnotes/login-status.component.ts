@@ -9,6 +9,7 @@ import { AuthService } from './auth-service'
 })
 export class LoginStatusComponent {
   loggedIn: boolean = false;
+  name: string = "";
 
   login() {
     this.router.navigate(['/login']);
@@ -22,6 +23,7 @@ export class LoginStatusComponent {
   constructor(private authService: AuthService, private router: Router) {
     authService.currentStatus.subscribe(s => {
       this.loggedIn = this.authService.isLoggedIn();
+      this.name = this.authService.getName();
     });
   }
 }
