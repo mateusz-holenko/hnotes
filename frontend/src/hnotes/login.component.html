@@ -1,13 +1,15 @@
-<form [formGroup]="loginForm">
-  <fieldset>
-    <legend>Login</legend>
-
-    <label>Name:</label>
-    <input formControllerName="handle">
-
-    <label>Password:</label>
-    <input formControllerName="password" type="password">
-    <br />
-    <button (click)="doLogin()">Login</button>
-  </fieldset>
-</form>
+<div class="container" style="height: 100vh; width: 100vw">
+  <div class="centered-containee">
+    <form [formGroup]="loginForm">
+      <div>
+        <label>Name:</label>
+        <input formControllerName="handle">
+      </div>
+      <div style="margin-top: 8px">
+        <label>Password:</label>
+        <input formControllerName="password" type="password">
+      </div>
+      <button (click)="doLogin()">Sign In</button>
+    </form>
+  </div>
+</div>
