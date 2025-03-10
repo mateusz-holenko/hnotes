@@ -1,5 +1,7 @@
 .notes_grid {
   display: grid;
-  grid-template-columns: 200px 200px 200px;
+  grid-template-columns: 300px 300px 300px 300px;
   grid-gap: 40px;
+  margin-top: 40px;
+  justify-content: center;
 }

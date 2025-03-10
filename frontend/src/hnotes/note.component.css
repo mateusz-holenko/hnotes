@@ -1,22 +1,19 @@
-:host {
-}
-
 div {
-  border-style: solid;
-  width: 200px;
+  border: solid 1px #e9e9e9;
+  width: 300px;
   padding: 10px;
   // margin: 10px;
   border-radius: 25px;
-
-  background: yellow;
 }
 
 div input {
   width: 95%;
+  outline: none;
 }
 
 div textarea {
   width: 95%;
+  outline: none;
 }
 
 div button {
@@ -24,5 +21,6 @@ div button {
 }
 
 .editable {
-  background: blue
+  border: solid 1px #0e2da3;
+  background: #0e2da3;
 }

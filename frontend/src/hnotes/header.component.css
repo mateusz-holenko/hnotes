@@ -1,10 +1,12 @@
 .header {
   background-color: #0E2DA3;
-  // position: absolute;
-  // left: 0px;
-  // right: 0px;
-  // top: 0px;
   height: 50px;
   display: flex;
   justify-content: space-around;
+}
+
+.header-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
 }

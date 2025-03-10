@@ -11,7 +11,7 @@ body {
 }
 
 .container {
-  position: relative;
+  position: static;
   width: 100%;
   height: 100%;
 }
@@ -23,5 +23,13 @@ body {
   left: 50%;
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
+}
+
+.x-centered-containee {
+  margin: 0px;
+  position: absolute;
+  left: 50%;
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
 }
 
