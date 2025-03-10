@@ -1,6 +1,6 @@
 <div>
   <h2>Add a new note</h2>
-  <note [editable]="true" />
+  <note (addedRequestEvent)="handleAdded($event)" [editable]="true" />
 </div>
 
 <div>

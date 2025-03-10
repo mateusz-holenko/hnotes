@@ -21,6 +21,7 @@ export class NoteComponent implements OnInit {
   })
 
   @Output() removeRequestEvent = new EventEmitter();
+  @Output() addedRequestEvent = new EventEmitter<NoteResult>();
 
   edit() {
     this.editable = true;
@@ -42,7 +43,9 @@ export class NoteComponent implements OnInit {
     let n = Object.assign(new NoteResult(), this.editForm.value);
 
     if (this.note.id == null) {
-      this.notesService.addNote(n).subscribe(() => { });
+      this.notesService.addNote(n).subscribe(() => {
+        this.addedRequestEvent.emit(n);
+       });
     } else {
       this.notesService.updateNote(this.note.id, n).subscribe(() => { });
       this.note = n;

@@ -27,6 +27,10 @@ export class NotesComponent implements OnInit {
     );
   }
 
+  handleAdded(note: NoteResult) {
+    this.notes.splice(0, 0, note);
+  }
+
   ngOnInit()
   {
     this.notesService.getNotes().subscribe(notes => { this.notes = notes });
