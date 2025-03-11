@@ -7,6 +7,7 @@ import { shareReplay, tap } from 'rxjs/operators';
 export class AuthService {
   private statusSource = new BehaviorSubject('logged-out');
   private jwt = '';
+  private name = '';
 
   currentStatus = this.statusSource.asObservable();
 
@@ -19,7 +20,9 @@ export class AuthService {
   }
 
   handleLoginResponse(response: any) {
-    this.jwt = response;
+    let parsedResponse = JSON.parse(response)
+    this.jwt = parsedResponse['jwt'];
+    this.name = parsedResponse['username'];
     this.statusSource.next('logged-in');
   }
 
@@ -32,7 +35,7 @@ export class AuthService {
   }
 
   getName() {
-    return '[unknown]';
+    return this.name != '' ? this.name : '[unknown]';
   }
 
   logout() {
