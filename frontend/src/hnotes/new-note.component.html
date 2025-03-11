@@ -1,0 +1,12 @@
+<!-- setting tabindex to make div handle focus/blur events -->
+<div class="box" tabindex="0">
+  <form [formGroup]="editForm" (ngSubmit)="handleDone()" >
+@if(!compactView) {
+    <input class="title" placeholder="Title" type="text" formControlName="title" >
+}
+    <input placeholder="New note..." formControlName="content">
+@if(!compactView) {
+    <button type="submit">Done</button>
+}
+  </form>
+</div>
