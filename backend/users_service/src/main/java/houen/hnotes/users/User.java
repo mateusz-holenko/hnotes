@@ -13,6 +13,14 @@ public class User {
 
   private String handle;
 
+  public User() {
+  }
+
+  public User(Integer id, String handle) {
+    this.id = id;
+    this.handle = handle;
+  }
+
   public Integer getId() {
     return this.id;
   }
@@ -27,5 +35,9 @@ public class User {
 
   public void setId(Integer id) {
     this.id = id;
+  }
+
+  public boolean checkCredentials(String password) {
+    return true;
   }
 }

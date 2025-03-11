@@ -27,21 +27,51 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Date;
 import java.util.Base64;
 
+import java.util.Collection;
+
+import org.springframework.web.bind.annotation.RequestBody;
+
+import org.springframework.http.HttpStatus;
+
+import java.util.Map;
+
+import org.slf4j.LoggerFactory;
+
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
 public class UsersRestController {
+
+    private static Collection<User> users = new ArrayList<User>() {{
+      add(new User(100, "admin"));
+      add(new User(101, "User1"));
+      add(new User(800, "Guest"));
+    }};
+
     @Value("${hnotes.users.jwt.key}")
     private String jwtKey;
-  
+
     @PostMapping("/users/login")
-    public String loginUser() {
+    public Map<String, String> loginUser(@RequestBody UserCredentials credentials) {
+      // var logger = LoggerFactory.getLogger(UsersRestController.class);
+      // logger.error("creds are: " + credentials.toString());
+
+      var user = users.stream()
+        .filter(u -> u.getHandle().equals(credentials.username()) && u.checkCredentials(credentials.password()))
+        .findFirst();
+
+      if(!user.isPresent()) {
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("user '%s' not found", credentials.username()));
+      }
+
       var currentTimestamp = System.currentTimeMillis();
       var jws = Jwts.builder()
-        .subject("Username")
+        .subject(user.get().getId().toString())
         .setIssuedAt(new Date(currentTimestamp))
         .setExpiration(new Date(currentTimestamp +  60 * 60 * 1000)) // 1h
         .signWith(SignatureAlgorithm.HS512, jwtKey.getBytes());
 
-      return jws.compact();
+      return Map.of(
+        "username", user.get().getHandle(),
+        "jwt", jws.compact());
     }
 }
