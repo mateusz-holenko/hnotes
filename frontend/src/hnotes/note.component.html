@@ -1,9 +1,15 @@
 @if (!editable) {
-<div>
-  <h1>{{ note.title }}</h1>
+<div class="box">
+  <div>
+  <p class="title">{{ note.title }}</p>
   <p>{{ note.content }}</p>
+  </div>
+  @if (buttonsVisible) {
+  <div class="buttons">
   <button (click)="edit()">edit</button>
   <button (click)="remove()">remove</button>
+  </div>
+  }
 </div>
 }
 @else {

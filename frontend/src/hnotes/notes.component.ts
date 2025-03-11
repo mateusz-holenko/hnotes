@@ -5,10 +5,11 @@ import { NoteComponent } from './note.component';
 import { LoginComponent } from './login.component';
 import { NoteResult } from './note-result';
 import { NotesService } from './notes.service';
+import { NewNoteComponent } from './new-note.component';
 
 @Component({
   selector: 'notes',
-  imports: [NoteComponent],
+  imports: [NoteComponent, NewNoteComponent],
   templateUrl: './notes.component.html',
   styleUrl: './notes.component.css'
 })

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, HostListener } from '@angular/core';
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { NoteResult } from './note-result';
@@ -13,6 +13,7 @@ import { NotesService } from './notes.service';
 export class NoteComponent implements OnInit {
   @Input() note: NoteResult = new NoteResult();
   visibleProp: boolean = true;
+  buttonsVisible: boolean = false;
 
   @Input() editable: boolean = false;
   editForm = new FormGroup({
@@ -51,6 +52,12 @@ export class NoteComponent implements OnInit {
       this.note = n;
       this.editable = false;
     }
+  }
+
+  @HostListener('mouseover', ['true'])
+  @HostListener('mouseout', ['false'])
+  handleMouseOver(isMouseOver: boolean) {
+    this.buttonsVisible = isMouseOver;
   }
 
   constructor(private http : HttpClient, private notesService: NotesService) {
