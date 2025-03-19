@@ -19,11 +19,11 @@ def testit(headless=False):
     # should be redirected to '/login'
     assert driver.current_url == 'http://localhost:4200/login'
 
-    form_handle = driver.find_element(By.XPATH, "//input[@formcontrollername='handle']")
-    form_handle.send_keys('username')
-    form_password = driver.find_element(By.XPATH, "//input[@formcontrollername='password']")
-    form_password.send_keys('password')
-    form_submit = driver.find_element(By.XPATH, "//button[text()='Login']")
+    form_handle = driver.find_element(By.XPATH, "//input[@formcontrolname='handle']")
+    form_handle.send_keys('admin')
+    form_password = driver.find_element(By.XPATH, "//input[@formcontrolname='password']")
+    form_password.send_keys('admin')
+    form_submit = driver.find_element(By.XPATH, "//button[text()='Sign In']")
     form_submit.click()
 
     # this should redirect us to '/notes'
