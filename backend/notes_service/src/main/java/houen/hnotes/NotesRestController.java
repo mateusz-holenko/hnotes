@@ -22,6 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.slf4j.LoggerFactory;
 
+import org.springframework.data.domain.PageRequest;
+
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
 public class NotesRestController {
@@ -48,7 +50,7 @@ public class NotesRestController {
     }
 
     @GetMapping("/notes")
-    public Iterable<Note> getNotes(Principal p, @RequestParam(value = "limit", defaultValue = "") Integer limit) {
+    public Iterable<Note> getNotes(Principal p, @RequestParam(value = "limit", defaultValue = "10") Integer limit, @RequestParam(value = "page", defaultValue = "0") Integer page) {
       var logger = LoggerFactory.getLogger(NotesRestController.class);
 
       if(p != null) {
@@ -56,8 +58,8 @@ public class NotesRestController {
         logger.error("Principal name: " + name);
       }
       
-      // TODO: implement the limit support
-      return notesRepository.findAll();
+      var result = notesRepository.findAll(PageRequest.of(page, limit));
+      return result.getContent();
     }
 
     @PutMapping("/notes/{id}")
