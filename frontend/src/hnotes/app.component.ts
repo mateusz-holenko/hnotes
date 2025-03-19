@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { NoteResult } from './note-result';
 import { HeaderComponent } from './header.component';
 
 @Component({

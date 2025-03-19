@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { NoteComponent } from './note.component';
-import { LoginComponent } from './login.component';
 import { NoteResult } from './note-result';
 import { NotesService } from './notes.service';
 import { NewNoteComponent } from './new-note.component';
