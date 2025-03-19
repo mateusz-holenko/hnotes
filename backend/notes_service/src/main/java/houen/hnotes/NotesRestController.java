@@ -48,7 +48,7 @@ public class NotesRestController {
     }
 
     @GetMapping("/notes")
-    public Iterable<Note> getNotes(Principal p, @RequestParam(value = "limit", defaultValue = "") String limit) {
+    public Iterable<Note> getNotes(Principal p, @RequestParam(value = "limit", defaultValue = "") Integer limit) {
       var logger = LoggerFactory.getLogger(NotesRestController.class);
 
       if(p != null) {
