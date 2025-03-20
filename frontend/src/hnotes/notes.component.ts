@@ -34,14 +34,30 @@ export class NotesComponent implements OnInit, OnDestroy {
   }
 
   refreshNotes() {
-    this.notesService.getNotes().subscribe(notes => { this.notes = notes.sort(x => x.id ?? 0) });
+    console.log("refreshing notes");
+    this.notesService
+      .prefetchNotes()
+      .subscribe(n => {
+        this.notes = this.notesService.notes.sort(x => x.id ?? 0);
+      });
+  }
+
+  loadMoreNotes() {
+    console.log("loading more notes");
+    this.notesService
+      .loadMoreNotes()
+      .subscribe(n => {
+        this.notes = this.notesService.notes.sort(x => x.id ?? 0);
+      });
   }
 
   ngOnInit() {
+    console.log("notes created");
     this.refreshSubscription = this.appService.currentRefreshStatus.subscribe(s => { this.refreshNotes() });
   }
 
   ngOnDestroy() {
+    console.log("notes destroyed");
     this.refreshSubscription!.unsubscribe();
   }
 
