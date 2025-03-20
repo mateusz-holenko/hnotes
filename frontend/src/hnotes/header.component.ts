@@ -3,6 +3,7 @@ import { Router, RouterOutlet } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { LoginStatusComponent } from './login-status.component';
+import { AppService } from './app-service';
 
 @Component({
   selector: 'header-component',
@@ -15,5 +16,9 @@ export class HeaderComponent {
     this.router.navigate(['/']);
   }
 
-  constructor(private router: Router) {}
+  requestRefresh() {
+    this.appService.requestRefresh();
+  }
+
+  constructor(private router: Router, private appService: AppService) {}
 }

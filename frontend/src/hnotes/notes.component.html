@@ -1,6 +1,5 @@
 <new-note (addedRequestEvent)="handleAdded($event)" />
 
-<button (click)="ngOnInit()">refresh</button>
 <div class="notes_grid">
   @for (n of notes; track n.id)  {
     <note (removeRequestEvent)="handleRemoveRequest(n.id)" [note]=n />

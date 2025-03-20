@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { NoteComponent } from './note.component';
 import { NoteResult } from './note-result';
 import { NotesService } from './notes.service';
+import { AppService } from './app-service';
 import { NewNoteComponent } from './new-note.component';
 
 @Component({
@@ -12,7 +13,8 @@ import { NewNoteComponent } from './new-note.component';
   templateUrl: './notes.component.html',
   styleUrl: './notes.component.css'
 })
-export class NotesComponent implements OnInit {
+export class NotesComponent implements OnInit, OnDestroy {
+  private refreshSubscription: Subscription | undefined;
   notes:any[] = [];
 
   handleRemoveRequest(id: number) {
@@ -31,10 +33,18 @@ export class NotesComponent implements OnInit {
     this.notes.splice(0, 0, note);
   }
 
-  ngOnInit()
-  {
+  refreshNotes() {
     this.notesService.getNotes().subscribe(notes => { this.notes = notes.sort(x => x.id ?? 0) });
   }
 
-  constructor(private notesService: NotesService, private router: Router) {}
+  ngOnInit() {
+    this.refreshSubscription = this.appService.currentRefreshStatus.subscribe(s => { this.refreshNotes() });
+  }
+
+  ngOnDestroy() {
+    this.refreshSubscription!.unsubscribe();
+  }
+
+  constructor(private notesService: NotesService, private appService: AppService, private router: Router) {
+  }
 }
