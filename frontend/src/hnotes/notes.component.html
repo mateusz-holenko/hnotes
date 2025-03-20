@@ -5,5 +5,6 @@
     <note (removeRequestEvent)="handleRemoveRequest(n.id)" [note]=n />
   } @empty {
     <p> no notes, sorry </p>
-}
+  }
+  <a href="javascript:void()" (click)="loadMoreNotes()">more...</a>
 </div>
