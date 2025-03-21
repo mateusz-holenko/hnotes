@@ -1,10 +1,9 @@
 package houen.hnotes;
 
 import java.util.ArrayList;
+import java.time.Instant;
 import java.security.Principal;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
@@ -43,13 +43,18 @@ public class NotesRestController {
       notesRepository.deleteAll();
       notesRepository.saveAll(innerNotes);
     }
+
+    record NewNoteResult(Integer id, Instant creationTimestamp) {};
     
     @PostMapping("/notes")
-    public void addNote(@RequestBody Note n) {
+    @ResponseBody
+    public NewNoteResult addNote(@RequestBody Note n) {
       notesRepository.save(n);
+      return new NewNoteResult(n.getId(), n.getCreationTimestamp());
     }
 
     @GetMapping("/notes")
+    @ResponseBody
     public Iterable<Note> getNotes(Principal p, @RequestParam(value = "limit", defaultValue = "10") Integer limit, @RequestParam(value = "page", defaultValue = "0") Integer page) {
       var logger = LoggerFactory.getLogger(NotesRestController.class);
 
@@ -61,13 +66,18 @@ public class NotesRestController {
       var result = notesRepository.findAll(PageRequest.of(page, limit));
       return result.getContent();
     }
+    
+    record EditedNoteResult(Instant lastModificationTimestamp) {};
 
     @PutMapping("/notes/{id}")
-    public void editNote(@PathVariable("id") int id, @RequestBody Note n) {
+    @ResponseBody
+    public EditedNoteResult editNote(@PathVariable("id") int id, @RequestBody Note n) {
       ensureNoteExists(id);
       
       n.setId(id);
       notesRepository.save(n);
+
+      return new EditedNoteResult(n.getLastModificationTimestamp());
     }
     
     @DeleteMapping("/notes/{id}")
