@@ -1,9 +1,15 @@
 package houen.hnotes;
 
+import java.time.Instant;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.SourceType;
 
 @Entity
 public class Note {
@@ -14,6 +20,12 @@ public class Note {
   private String title;
 
   private String content;
+
+  @CreationTimestamp(source = SourceType.DB)
+  private Instant creationTimestamp;
+
+  @UpdateTimestamp(source = SourceType.DB)
+  private Instant lastModificationTimestamp;
 
   public Integer getId() {
     return this.id;
@@ -37,5 +49,13 @@ public class Note {
 
   public void setId(Integer id) {
     this.id = id;
+  }
+
+  public Instant getCreationTimestamp() {
+    return this.creationTimestamp;
+  }
+
+  public Instant getLastModificationTimestamp() {
+    return this.lastModificationTimestamp;
   }
 }
