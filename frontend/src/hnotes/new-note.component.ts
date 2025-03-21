@@ -28,7 +28,7 @@ export class NewNoteComponent {
     }
 
     // ignore focusout events from internal div elements
-    if(ev.explicitOriginalTarget.localName != 'new-note') {
+    if(ev.explicitOriginalTarget == null || ev.explicitOriginalTarget.localName != 'new-note') {
       return;
     }
 
