@@ -1,17 +1,21 @@
-import { Component, OnInit, Input, Output, EventEmitter, HostListener } from '@angular/core';
+import { Component, OnInit, AfterViewChecked, Input, Output, EventEmitter, HostListener, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { NoteResult } from './note-result';
 import { NotesService } from './notes.service';
+import { NewNoteComponent } from './new-note.component';
 
 @Component({
   selector: 'note',
   templateUrl: './note.component.html',
   styleUrl: './note.component.css',
-  imports: [ReactiveFormsModule]
+  imports: [ReactiveFormsModule, NewNoteComponent]
 })
-export class NoteComponent implements OnInit {
+export class NoteComponent implements OnInit, AfterViewChecked {
+  @ViewChild("editNote") editNote!: NewNoteComponent;
+
   @Input() note: NoteResult = new NoteResult();
+
   visibleProp: boolean = true;
   buttonsVisible: boolean = false;
 
@@ -32,12 +36,23 @@ export class NoteComponent implements OnInit {
     this.removeRequestEvent.emit();
   }
 
+  handleNote(note: NoteResult) {
+    console.log("handling note");
+    this.editable = false;
+  }
+
   ngOnInit(): void {
     this.visibleProp = true;
     this.editForm.patchValue({
       title: this.note.title,
       content: this.note.content
     })
+  }
+
+  ngAfterViewChecked(): void {
+    // if(this.editable) {
+    //   this.editNote.editNote(this.note);
+    // }
   }
 
   onSubmit() {

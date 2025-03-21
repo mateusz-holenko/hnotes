@@ -14,12 +14,6 @@
 }
 @else {
 <div class="editable">
-  <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
-    <label for="title">Title: </label>
-    <input id="title" type="text" formControlName="title">
-    <label for="content">Content: </label>
-    <textarea id="content" formControlName="content" rows="10"></textarea>
-    <button type="submit">Submit</button>
-  </form>
+  <new-note [note]=note #editNote (addedRequestEvent)="handleNote($event)" />
 </div>
 }
