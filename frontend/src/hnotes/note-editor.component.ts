@@ -3,12 +3,12 @@ import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { NoteResult } from './note-result';
 
 @Component({
-  selector: 'new-note',
+  selector: 'note-editor',
   imports: [ReactiveFormsModule],
-  templateUrl: './new-note.component.html',
-  styleUrl: './new-note.component.css'
+  templateUrl: './note-editor.component.html',
+  styleUrl: './note-editor.component.css'
 })
-export class NewNoteComponent implements OnInit {
+export class NoteEditorComponent implements OnInit {
   @Input() note: NoteResult | undefined;
   @Output() acceptNote = new EventEmitter<NoteResult>();
 
@@ -38,7 +38,7 @@ export class NewNoteComponent implements OnInit {
     }
 
     // ignore focusout events from internal div elements
-    if(ev.explicitOriginalTarget == null || ev.explicitOriginalTarget.localName != 'new-note') {
+    if(ev.explicitOriginalTarget == null || ev.explicitOriginalTarget.localName != 'note-editor') {
       return;
     }
 

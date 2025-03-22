@@ -1,13 +1,13 @@
 import { Component, OnInit, Input, Output, EventEmitter, HostListener } from '@angular/core';
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { NoteResult } from './note-result';
-import { NewNoteComponent } from './new-note.component';
+import { NoteEditorComponent } from './note-editor.component';
 
 @Component({
   selector: 'note',
   templateUrl: './note.component.html',
   styleUrl: './note.component.css',
-  imports: [ReactiveFormsModule, NewNoteComponent]
+  imports: [ReactiveFormsModule, NoteEditorComponent]
 })
 export class NoteComponent implements OnInit {
   @Input({required: true}) note!: NoteResult;

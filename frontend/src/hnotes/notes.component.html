@@ -1,4 +1,4 @@
-<new-note (acceptNote)="handleAcceptNote($event)" />
+<note-editor (acceptNote)="handleAcceptNote($event)" />
 
 <div class="notes_grid">
   @for (n of notesService.notes; track n.id)  {

@@ -4,11 +4,11 @@ import { NoteComponent } from './note.component';
 import { NoteResult } from './note-result';
 import { NotesService } from './notes.service';
 import { AppService } from './app-service';
-import { NewNoteComponent } from './new-note.component';
+import { NoteEditorComponent } from './note-editor.component';
 
 @Component({
   selector: 'notes',
-  imports: [NoteComponent, NewNoteComponent],
+  imports: [NoteComponent, NoteEditorComponent],
   templateUrl: './notes.component.html',
   styleUrl: './notes.component.css'
 })
