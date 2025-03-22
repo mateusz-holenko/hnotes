@@ -1,8 +1,6 @@
-import { Component, OnInit, AfterViewChecked, Input, Output, EventEmitter, HostListener, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, HostListener } from '@angular/core';
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { NoteResult } from './note-result';
-import { NotesService } from './notes.service';
 import { NewNoteComponent } from './new-note.component';
 
 @Component({
@@ -11,70 +9,42 @@ import { NewNoteComponent } from './new-note.component';
   styleUrl: './note.component.css',
   imports: [ReactiveFormsModule, NewNoteComponent]
 })
-export class NoteComponent implements OnInit, AfterViewChecked {
-  @ViewChild("editNote") editNote!: NewNoteComponent;
-
-  @Input() note: NoteResult = new NoteResult();
-
-  visibleProp: boolean = true;
-  buttonsVisible: boolean = false;
-
+export class NoteComponent implements OnInit {
+  @Input({required: true}) note!: NoteResult;
   @Input() editable: boolean = false;
-  editForm = new FormGroup({
+
+  @Output() deleteNote = new EventEmitter<Number>();
+  @Output() acceptNote = new EventEmitter<NoteResult>();
+
+  private editForm = new FormGroup({
     title: new FormControl(''),
     content: new FormControl('')
   })
 
-  @Output() removeRequestEvent = new EventEmitter();
-  @Output() addedRequestEvent = new EventEmitter<NoteResult>();
+  buttonsVisible: boolean = false;
 
-  edit() {
+  editNote() {
     this.editable = true;
   }
 
-  remove() {
-    this.removeRequestEvent.emit();
-  }
-
-  handleNote(note: NoteResult) {
-    console.log("handling note");
-    this.editable = false;
+  removeNote() {
+    this.deleteNote.emit(this.note.id!);
   }
 
   ngOnInit(): void {
-    this.visibleProp = true;
     this.editForm.patchValue({
       title: this.note.title,
       content: this.note.content
     })
   }
 
-  ngAfterViewChecked(): void {
-    // if(this.editable) {
-    //   this.editNote.editNote(this.note);
-    // }
-  }
-
-  onSubmit() {
-    let n = Object.assign(new NoteResult(), this.editForm.value);
-
-    if (this.note.id == null) {
-      this.notesService.addNote(n).subscribe(() => {
-        this.addedRequestEvent.emit(n);
-       });
-    } else {
-      this.notesService.updateNote(this.note.id, n).subscribe(() => { });
-      this.note = n;
-      this.editable = false;
-    }
+  handleAcceptNote(note: NoteResult) {
+    this.acceptNote.emit(note);
   }
 
   @HostListener('mouseover', ['true'])
   @HostListener('mouseout', ['false'])
   handleMouseOver(isMouseOver: boolean) {
     this.buttonsVisible = isMouseOver;
-  }
-
-  constructor(private http : HttpClient, private notesService: NotesService) {
   }
 }

@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { NoteComponent } from './note.component';
 import { NoteResult } from './note-result';
 import { NotesService } from './notes.service';
@@ -15,45 +14,43 @@ import { NewNoteComponent } from './new-note.component';
 })
 export class NotesComponent implements OnInit, OnDestroy {
   private refreshSubscription: Subscription | undefined;
-  notes:any[] = [];
 
-  handleRemoveRequest(id: number) {
+  handleDeleteNote(id: number) {
     console.log('Requested to remove note #' + id);
-    this.notesService.removeNote(id).subscribe(
-      () => {
-        var idx = this.notes.findIndex(n => n.id == id);
-        if(idx > -1) {
-          this.notes.splice(idx, 1);
-        }
-      }
-    );
+    this.notesService
+      .removeNote(id)
+      .subscribe();
   }
 
-  handleAdded(note: NoteResult) {
-    this.notes.splice(0, 0, note);
+  handleAcceptNote(note: NoteResult) {
+    if(note.id == null) {
+      this.notesService
+        .addNote(note)
+        .subscribe();
+    } else {
+      this.notesService
+        .updateNote(note.id, note)
+        .subscribe();
+    }
   }
 
   refreshNotes() {
     console.log("refreshing notes");
     this.notesService
       .prefetchNotes()
-      .subscribe(n => {
-        this.notes = this.notesService.notes.sort(x => x.id ?? 0);
-      });
+      .subscribe();
   }
 
   loadMoreNotes() {
     console.log("loading more notes");
     this.notesService
       .loadMoreNotes()
-      .subscribe(n => {
-        this.notes = this.notesService.notes.sort(x => x.id ?? 0);
-      });
+      .subscribe();
   }
 
   ngOnInit() {
     console.log("notes created");
-    this.refreshSubscription = this.appService.currentRefreshStatus.subscribe(s => { this.refreshNotes() });
+    this.refreshSubscription = this.appService.currentRefreshStatus.subscribe(() => { this.refreshNotes() });
   }
 
   ngOnDestroy() {
@@ -61,6 +58,6 @@ export class NotesComponent implements OnInit, OnDestroy {
     this.refreshSubscription!.unsubscribe();
   }
 
-  constructor(private notesService: NotesService, private appService: AppService, private router: Router) {
+  constructor(public notesService: NotesService, private appService: AppService) {
   }
 }

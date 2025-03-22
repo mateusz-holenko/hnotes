@@ -10,13 +10,9 @@ const pageSize = 15;
 export class NotesService {
   private fetchedPages = 0;
   private urlBase = 'http://localhost:8080';
+  // TODO: add timetouts
 
   notes:NoteResult[] = [];
-
-  getNotes() : Observable<NoteResult[]>
-  {
-    return this.http.get<NoteResult[]>(this.urlBase + 'notes');
-  }
 
   prefetchNotes() : Observable<NoteResult[]> {
     // TODO: handle errors
@@ -49,19 +45,42 @@ export class NotesService {
     return observableNotesResult;
   }
 
-  removeNote(id: number)
-  {
-    return this.http.delete(this.urlBase + '/notes/' + id);
+  removeNote(id: number) {
+    return this.http
+      .delete(`${this.urlBase}/notes/${id}`)
+      .pipe(
+        tap(() => { this.handleNoteRemoved(id); })
+      );
   }
 
-  addNote(n: NoteResult)
-  {
-    return this.http.post<any>(this.urlBase + '/notes', n);
+  private handleNoteRemoved(id: Number) {
+    var idx = this.notes.findIndex(n => n.id == id);
+    if(idx > -1) {
+      this.notes.splice(idx, 1);
+    }
   }
 
-  updateNote(id: number, n: NoteResult)
-  {
-    return this.http.put<any>(this.urlBase + '/notes/' + id, n);
+  addNote(n: NoteResult) {
+    return this.http
+      .post<any>(`${this.urlBase}/notes`, n)
+      .pipe(
+        tap(r => {
+          n.id = r.id;
+          this.notes.splice(0, 0, n);
+        })
+      );
+  }
+
+  updateNote(id: number, n: NoteResult) {
+    return this.http
+      .put<any>(`${this.urlBase}/notes/${id}`, n)
+      .pipe(
+        tap(() => {
+          // move the edited note to front
+          this.handleNoteRemoved(id);
+          this.notes.splice(0, 0, n);
+        })
+      );
   }
 
   constructor(private http : HttpClient) {}
