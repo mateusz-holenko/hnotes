@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -63,7 +64,8 @@ public class NotesRestController {
         logger.error("Principal name: " + name);
       }
       
-      var result = notesRepository.findAll(PageRequest.of(page, limit));
+      var result = notesRepository
+        .findAll(PageRequest.of(page, limit, Sort.by("lastModificationTimestamp").descending()));
       return result.getContent();
     }
     
