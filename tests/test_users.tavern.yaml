@@ -1,0 +1,57 @@
+---
+test_name: Login a obtain JWT
+
+stages:
+  - name: Try logging in with a bad parameter
+
+    request:
+      url: http://localhost:8090/users/login
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        login: admin
+        #  password skipped on purpose
+
+    response:
+      strict: False
+      status_code: 400
+      json:
+        # TODO: to be fixed
+        message: User 'null' not found or provided bad credentials
+
+
+  - name: Try logging in with a bad password
+
+    request:
+      url: http://localhost:8090/users/login
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        username: admin
+        password: badpassword
+
+    response:
+      strict: False
+      status_code: 400
+      json:
+        message: User 'admin' not found or provided bad credentials
+
+
+  - name: Login with proper credentials
+
+    request:
+      url: http://localhost:8090/users/login
+      method: POST
+      headers:
+        content-type: application/json
+      json:
+        username: admin
+        password: admin
+
+    response:
+      strict: False
+      status_code: 200
+      json:
+        username: admin
