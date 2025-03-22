@@ -38,6 +38,6 @@ public class User {
   }
 
   public boolean checkCredentials(String password) {
-    return true;
+    return this.handle.equals(password);
   }
 }
