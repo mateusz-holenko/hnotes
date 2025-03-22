@@ -60,7 +60,7 @@ public class UsersRestController {
         .findFirst();
 
       if(!user.isPresent()) {
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("user '%s' not found", credentials.username()));
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("User '%s' not found or provided bad credentials", credentials.username()));
       }
 
       var currentTimestamp = System.currentTimeMillis();
