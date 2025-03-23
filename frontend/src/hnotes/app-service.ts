@@ -1,8 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({providedIn: 'root'})
 export class AppService {
+  private snackBar = inject(MatSnackBar);
   private refreshSource = new BehaviorSubject('refresh-request');
   currentRefreshStatus = this.refreshSource.asObservable();
 
@@ -10,6 +12,11 @@ export class AppService {
     this.refreshSource.next('refresh-requested');
   }
 
-  constructor() {
+  showError(text: string) {
+    this.snackBar.open(text, 'Close');
+  }
+
+  closeError() {
+    this.snackBar.dismiss();
   }
 }
