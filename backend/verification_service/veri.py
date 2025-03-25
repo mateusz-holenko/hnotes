@@ -9,4 +9,11 @@ def health_check():
 
 @app.route('/verificator', methods=['POST'])
 def verify_input():
-    return { 'length': len(request.data) }
+    input = str(request.data)
+    accepted = 'banana' not in input
+    result = {
+        'status': 'accepted' if accepted else 'rejected',
+        'length': len(request.data)
+    }
+    app.logger.info('Input is: ' + input + "; result is: " + str(result))
+    return result
