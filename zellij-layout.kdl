@@ -29,8 +29,8 @@ layout {
 			pane {
 				name "src: notes"
 				cwd "backend/notes_service"
-				command "helix"
-				args "."
+				command "nix-shell"
+				args "--run" "helix ."
 			}
 			pane {
 				name "build: notes"
