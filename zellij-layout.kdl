@@ -1,0 +1,116 @@
+layout {
+	default_tab_template {
+	    pane size=1 borderless=true {
+		    plugin location="zellij:tab-bar"
+	    }
+	    children
+	}
+
+	tab name="#1 FRO" {
+		pane split_direction="vertical" {
+			pane {
+				name "src: frontend"
+				cwd "frontend"
+				command "helix"
+				args "."
+			}
+			pane {
+				name "build: frontend"
+				size "30%"
+				cwd "frontend"
+				command "nix-shell"
+				args "--run" "ng serve"
+				start_suspended true
+			}
+		}
+	}
+	tab name="#2 B:N" {
+		pane split_direction="vertical" {
+			pane {
+				name "src: notes"
+				cwd "backend/notes_service"
+				command "helix"
+				args "."
+			}
+			pane {
+				name "build: notes"
+				size "30%"
+				cwd "backend/notes_service"
+				command "nix-shell"
+				args "--run" "find . -name \"*.java\" | entr -r ./mvnw spring-boot:run"
+				start_suspended true
+			}
+		}
+	}
+	tab name="#3 B:U" {
+		pane split_direction="vertical" {
+			pane {
+				name "src: users"
+				cwd "backend/users_service"
+				command "helix"
+				args "."
+			}
+			pane {
+				name "build: users"
+				size "30%"
+				cwd "backend/users_service"
+				command "nix-shell"
+				args "--run" "find . -name \"*.java\" | entr -r ./mvnw spring-boot:run"
+				start_suspended true
+			}
+		}
+	}
+	tab name="#4 B:S" {
+		pane split_direction="vertical" {
+			pane {
+				name "src: status"
+				cwd "backend/status_service"
+				command "helix"
+				args "."
+			}
+			pane {
+				name "build: status"
+				size "30%"
+				cwd "backend/status_service"
+				command "nix-shell"
+				args "--run" "find . -name \"*.java\" | entr -r ./mvnw spring-boot:run"
+				start_suspended true
+			}
+		}
+	}
+	tab name="#5 B:V" {
+		pane split_direction="vertical" {
+			pane {
+				name "src: verification"
+				cwd "backend/verification_service"
+				command "helix"
+				args "."
+			}
+			pane {
+				name "build: status"
+				size "30%"
+				cwd "backend/verification_service"
+				command "nix-shell"
+				args "--run" "flask --app veri run"
+				start_suspended true
+			}
+		}
+	}
+	tab name="#6 DB" {
+		pane split_direction="vertical" {
+			pane {
+				name "db"
+				command "bash"
+				args "-c" "sudo mariadbd-safe --datadir=/var/lib/mysql/"
+			}
+		}
+	}
+	tab name="#7 Lazygit" {
+		pane split_direction="vertical" {
+			pane {
+				name "lazygit"
+				command "lazygit"
+			}
+		}
+	}
+}
