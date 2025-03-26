@@ -50,6 +50,9 @@ public class NotesRestController {
     }
 
     @Autowired
+    private NotesRestControllerOptions options;
+
+    @Autowired
     private RestTemplate restTemplate;
   
     @Autowired
@@ -79,6 +82,14 @@ public class NotesRestController {
       if(!verificationResult.status().equals("accepted")) {
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Note's content not accepted");
       }
+
+      try {
+        var delay = options.getCreateDelay();
+        if(delay > 0) {
+          Thread.sleep(delay);
+        }
+      } catch (Exception e) { }
+
       notesRepository.save(n);
       return new NewNoteResult(n.getId(), n.getCreationTimestamp());
     }
