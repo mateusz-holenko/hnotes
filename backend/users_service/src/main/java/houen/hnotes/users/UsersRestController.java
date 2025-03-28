@@ -38,7 +38,7 @@ import java.util.Map;
 import org.slf4j.LoggerFactory;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 public class UsersRestController {
 
     private static Collection<User> users = new ArrayList<User>() {{
