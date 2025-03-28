@@ -1,0 +1,4 @@
+dockerfiles/frontend/html
+
+dockerfiles/notes/hnotes.jar
+dockerfiles/users/hnotes-users.jar
