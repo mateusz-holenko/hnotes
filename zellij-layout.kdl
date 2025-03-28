@@ -19,7 +19,7 @@ layout {
 				size "30%"
 				cwd "frontend"
 				command "nix-shell"
-				args "--run" "ng serve"
+				args "--run" "ng serve --configuration development"
 				start_suspended true
 			}
 		}
