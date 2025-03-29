@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import org.springframework.web.server.ResponseStatusException;
 
@@ -74,7 +73,6 @@ public class NotesRestController {
     record NewNoteResult(Integer id, Instant creationTimestamp) {};
     
     @PostMapping("/notes")
-    @ResponseBody
     public NewNoteResult addNote(@RequestBody Note n) {
       var logger = LoggerFactory.getLogger(NotesRestController.class);
       var verificationResult = new VerificationService(restTemplate).Check(n.getContent());
@@ -95,7 +93,6 @@ public class NotesRestController {
     }
 
     @GetMapping("/notes")
-    @ResponseBody
     public Iterable<Note> getNotes(Principal p, @RequestParam(value = "limit", defaultValue = "10") Integer limit, @RequestParam(value = "page", defaultValue = "0") Integer page) {
       var logger = LoggerFactory.getLogger(NotesRestController.class);
 
@@ -112,7 +109,6 @@ public class NotesRestController {
     record EditedNoteResult(Instant lastModificationTimestamp) {};
 
     @PutMapping("/notes/{id}")
-    @ResponseBody
     public EditedNoteResult editNote(@PathVariable("id") int id, @RequestBody Note n) {
       ensureNoteExists(id);
       
