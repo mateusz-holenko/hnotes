@@ -106,7 +106,6 @@ public class NotesRestController {
     }
 
     private void ensureNoteExists(int id) {
-      // using two DB calls is ugly, but I couldn't find a better way in the API?!
       var present = notesRepository.existsById(id);
       if(!present) {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("note %d not found", id));
