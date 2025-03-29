@@ -3,21 +3,25 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { NoteResult } from './note-result';
 import { tap } from 'rxjs/operators';
+import { environment } from '../environments/environment';
 
 const pageSize = 15;
 
 @Injectable({providedIn: 'root'})
 export class NotesService {
   private fetchedPages = 0;
-  private urlBase = 'http://localhost:8080';
   // TODO: add timetouts
 
   notes:NoteResult[] = [];
 
+  private getFullUrl(path: string) {
+    return environment.notesServiceUrl + path;
+  }
+
   prefetchNotes() : Observable<NoteResult[]> {
     // TODO: handle errors
     var observableNotesResult = this.http
-      .get<NoteResult[]>(`${this.urlBase}/notes?limit=${pageSize}`)
+      .get<NoteResult[]>(this.getFullUrl(`/notes?limit=${pageSize}`))
       .pipe(
         tap(notes => this.handleNotes('new', notes))
       );
@@ -38,7 +42,7 @@ export class NotesService {
     // TODO: race condition!
     var nextPage = this.fetchedPages + 1;
     var observableNotesResult = this.http
-      .get<NoteResult[]>(`${this.urlBase}/notes?limit=${pageSize}&page=${nextPage}`)
+      .get<NoteResult[]>(this.getFullUrl(`/notes?limit=${pageSize}&page=${nextPage}`))
       .pipe<NoteResult[]>(
         tap(n => { this.handleNotes('append', n) })
       );
@@ -47,7 +51,7 @@ export class NotesService {
 
   removeNote(id: number) {
     return this.http
-      .delete(`${this.urlBase}/notes/${id}`)
+      .delete(this.getFullUrl(`/notes/${id}`))
       .pipe(
         tap(() => { this.handleNoteRemoved(id); })
       );
@@ -62,7 +66,7 @@ export class NotesService {
 
   addNote(n: NoteResult) {
     return this.http
-      .post<any>(`${this.urlBase}/notes`, n)
+      .post<any>(this.getFullUrl('/notes'), n)
       .pipe(
         tap(r => {
           n.id = r.id;
@@ -73,7 +77,7 @@ export class NotesService {
 
   updateNote(id: number, n: NoteResult) {
     return this.http
-      .put<any>(`${this.urlBase}/notes/${id}`, n)
+      .put<any>(this.getFullUrl(`/notes/${id}`), n)
       .pipe(
         tap(() => {
           // move the edited note to front
