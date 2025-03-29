@@ -11,13 +11,10 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import org.springframework.web.server.ResponseStatusException;
-
-import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 
 import org.springframework.http.HttpStatus;
 
@@ -31,28 +28,11 @@ import org.springframework.data.domain.Sort;
 @RestController
 @CrossOrigin(origins = "*")
 public class NotesRestController {
-
-    // TODO: Turn into an actual service
-    private class VerificationService {
-      private final RestTemplate service;
-
-      public record VerificationResult(String status, Integer length) {};
-
-      @CircuitBreaker(name = "verification-service")
-      public VerificationResult Check(String content) {
-        return service.postForObject("http://localhost:5000/verificator", content, VerificationResult.class);
-      }
-
-      public VerificationService(RestTemplate service) {
-        this.service = service;
-      }
-    }
-
     @Autowired
     private NotesRestControllerOptions options;
 
     @Autowired
-    private RestTemplate restTemplate;
+    private VerificationService verificationServiceProxy;
   
     @Autowired
     private NotesRepository notesRepository;
@@ -75,7 +55,7 @@ public class NotesRestController {
     @PostMapping("/notes")
     public NewNoteResult addNote(@RequestBody Note n) {
       var logger = LoggerFactory.getLogger(NotesRestController.class);
-      var verificationResult = new VerificationService(restTemplate).Check(n.getContent());
+      var verificationResult = verificationServiceProxy.Check(n.getContent());
       logger.error("Verification result is: " + verificationResult.toString());
       if(!verificationResult.status().equals("accepted")) {
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Note's content not accepted");
