@@ -7,4 +7,4 @@ RUN pip3 install -r requirements.txt
 COPY app/* /app
 
 EXPOSE 5000
-ENTRYPOINT ["flask", "--app", "veri", "run"]
+ENTRYPOINT ["flask", "--app", "veri", "run", "--host=0.0.0.0"]
