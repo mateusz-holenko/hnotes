@@ -113,4 +113,10 @@ layout {
 			}
 		}
 	}
+	tab name="#8 k9s" {
+		pane {
+			name "k9s"
+			command "k9s"
+		}
+	}
 }
