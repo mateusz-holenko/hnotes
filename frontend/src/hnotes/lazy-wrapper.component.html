@@ -1,0 +1,15 @@
+@if (mode == LazyWrapperMode.Loading) {
+<mat-spinner style="margin:auto"></mat-spinner>
+}
+@else if(mode == LazyWrapperMode.Error) {
+<p style="margin:auto;font-size:100px;color:#005cbb">?</p>
+}
+@else if(mode == LazyWrapperMode.Loaded) {
+<ng-content></ng-content>
+}
+@else if(mode == LazyWrapperMode.Uninitialized) {
+  <div></div>
+}
+@else {
+  <p>[UNEXPECED MODE: {{mode}}]</p>
+}
