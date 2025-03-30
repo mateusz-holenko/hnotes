@@ -61,12 +61,7 @@ public class NotesRestController {
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Note's content not accepted");
       }
 
-      try {
-        var delay = options.getCreateDelay();
-        if(delay > 0) {
-          Thread.sleep(delay);
-        }
-      } catch (Exception e) { }
+      options.waitOnCreate();
 
       notesRepository.save(n);
       return new NewNoteResult(n.getId(), n.getCreationTimestamp());
@@ -81,6 +76,8 @@ public class NotesRestController {
         logger.error("Principal name: " + name);
       }
       
+      options.waitOnFetch();
+
       var result = notesRepository
         .findAll(PageRequest.of(page, limit, Sort.by("lastModificationTimestamp").descending()));
       return result.getContent();
@@ -92,6 +89,8 @@ public class NotesRestController {
     public EditedNoteResult editNote(@PathVariable("id") int id, @RequestBody Note n) {
       ensureNoteExists(id);
       
+      options.waitOnUpdate();
+
       n.setId(id);
       notesRepository.save(n);
 
@@ -101,6 +100,8 @@ public class NotesRestController {
     @DeleteMapping("/notes/{id}")
     public void deleteNote(@PathVariable("id") int id) {
       ensureNoteExists(id);
+      
+      options.waitOnRemove();
       
       notesRepository.deleteById(id);
     }
