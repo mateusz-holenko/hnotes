@@ -3,6 +3,11 @@ import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { NoteResult } from './note-result';
 import { NoteEditorComponent } from './note-editor.component';
 
+enum NoteComponentMode {
+  ReadOnly,
+  Editable
+}
+
 @Component({
   selector: 'note',
   templateUrl: './note.component.html',
@@ -10,8 +15,10 @@ import { NoteEditorComponent } from './note-editor.component';
   imports: [ReactiveFormsModule, NoteEditorComponent]
 })
 export class NoteComponent implements OnInit {
+  NoteComponentModeType = NoteComponentMode;
+
   @Input({required: true}) note!: NoteResult;
-  @Input() editable: boolean = false;
+  @Input() mode: NoteComponentMode = NoteComponentMode.ReadOnly;
 
   @Output() deleteNote = new EventEmitter<Number>();
   @Output() acceptNote = new EventEmitter<NoteResult>();
@@ -24,7 +31,7 @@ export class NoteComponent implements OnInit {
   buttonsVisible: boolean = false;
 
   editNote() {
-    this.editable = true;
+    this.mode = NoteComponentMode.Editable;
   }
 
   removeNote() {
@@ -40,6 +47,7 @@ export class NoteComponent implements OnInit {
 
   handleAcceptNote(note: NoteResult) {
     this.acceptNote.emit(note);
+    this.mode = NoteComponentMode.ReadOnly;
   }
 
   @HostListener('mouseover', ['true'])
