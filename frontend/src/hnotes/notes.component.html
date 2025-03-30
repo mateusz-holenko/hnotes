@@ -1,10 +1,25 @@
-<note-editor (acceptNote)="handleAcceptNote($event)" />
+<lazy-wrapper #note_editor_wrapper [mode]=LazyWrapperMode.Loaded>
+  <note-editor (acceptNote)="handleAcceptNote(note_editor_wrapper, $event)" />
+</lazy-wrapper>
 
-<div class="notes_grid">
-  @for (n of notesService.notes; track n.id)  {
-    <note (acceptNote)="handleAcceptNote($event)" (deleteNote)="handleDeleteNote(n.id!)" [note]=n />
-  } @empty {
-    <p> no notes, sorry </p>
+<lazy-wrapper #notes_grid_wrapper [mode]=LazyWrapperMode.Loading>
+  @if(notesService.notes.length == 0) {
+    <div style="width: 100%">
+      <p style="text-align: center">no notes, sorry</p>
+    </div>
   }
-  <a href="javascript:void()" (click)="loadMoreNotes()">more...</a>
-</div>
+  @else {
+  <div class="notes_grid">
+    @for(n of notesService.notes; track n.id)  {
+      <lazy-wrapper #note_lazy_wrapper [mode]=LazyWrapperMode.Loaded>
+        <note (acceptNote)="handleAcceptNote(note_lazy_wrapper, $event)" (deleteNote)="handleDeleteNote(note_lazy_wrapper, $event)" [note]=n />
+      </lazy-wrapper>
+    }
+    <lazy-wrapper #load_more_wrapper [mode]=LazyWrapperMode.Loaded>
+      <div class="box">
+        <a href="javascript:void()" (click)="loadMoreNotes(load_more_wrapper)" style="margin: auto">more...</a>
+      </div>
+    </lazy-wrapper>
+  </div>
+  }
+</lazy-wrapper>

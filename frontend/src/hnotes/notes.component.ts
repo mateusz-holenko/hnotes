@@ -1,56 +1,93 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { NoteComponent } from './note.component';
 import { NoteResult } from './note-result';
 import { NotesService } from './notes.service';
 import { AppService } from './app-service';
 import { NoteEditorComponent } from './note-editor.component';
+import { LazyWrapperComponent, LazyWrapperModeEnum } from './lazy-wrapper.component';
 
 @Component({
   selector: 'notes',
-  imports: [NoteComponent, NoteEditorComponent],
+  imports: [NoteComponent, NoteEditorComponent, LazyWrapperComponent],
   templateUrl: './notes.component.html',
   styleUrl: './notes.component.css'
 })
-export class NotesComponent implements OnInit, OnDestroy {
-  private refreshSubscription: Subscription | undefined;
+export class NotesComponent implements AfterViewInit, OnDestroy {
+  LazyWrapperMode = LazyWrapperModeEnum;
 
-  handleDeleteNote(id: number) {
+  private refreshSubscription: Subscription | undefined;
+  @ViewChild('notes_grid_wrapper') gridWrapper!: LazyWrapperComponent;
+
+  handleDeleteNote(wrapper: LazyWrapperComponent, id: number) {
     console.log('Requested to remove note #' + id);
+    wrapper.mode = LazyWrapperModeEnum.Loading;
+
     this.notesService
       .removeNote(id)
-      .subscribe();
+      .subscribe(
+        () => { wrapper.mode = LazyWrapperModeEnum.Loaded; },
+        () => {
+          wrapper.mode = LazyWrapperModeEnum.Error;
+          this.appService.showError('Error while removing a note. Please try again.');
+        });
   }
 
-  handleAcceptNote(note: NoteResult) {
-    if(note.id == null) {
-      this.notesService
-        .addNote(note)
-        .subscribe();
-    } else {
-      this.notesService
-        .updateNote(note.id, note)
-        .subscribe();
-    }
+  handleAcceptNote(wrapper: LazyWrapperComponent, note: NoteResult) {
+    wrapper.mode = LazyWrapperModeEnum.Loading;
+
+    var operation = (note.id == null)
+      ? this.notesService.addNote(note)
+      : this.notesService.updateNote(note.id, note);
+
+    operation
+        .subscribe(
+          () => {
+            wrapper.mode = LazyWrapperModeEnum.Loaded;
+          },
+          () => {
+            wrapper.mode = LazyWrapperModeEnum.Error;
+            this.appService.showError('Error while adding/updating a note. Please try again.');
+          }
+        );
   }
 
   refreshNotes() {
     console.log("refreshing notes");
+
+    this.gridWrapper.mode = LazyWrapperModeEnum.Loading;
+
     this.notesService
       .prefetchNotes()
-      .subscribe();
+      .subscribe(
+        () => { this.gridWrapper.mode = LazyWrapperModeEnum.Loaded; },
+        () => {
+          this.gridWrapper.mode = LazyWrapperModeEnum.Error;
+          this.appService.showError('Error while loading notes. Please try again');
+        });
   }
 
-  loadMoreNotes() {
+  loadMoreNotes(wrapper: LazyWrapperComponent) {
     console.log("loading more notes");
+
+    wrapper.mode = LazyWrapperModeEnum.Loading;
     this.notesService
       .loadMoreNotes()
-      .subscribe();
+      .subscribe(
+        () => { wrapper.mode = LazyWrapperModeEnum.Loaded; },
+        () => {
+          wrapper.mode = LazyWrapperModeEnum.Error;
+          this.appService.showError('Error while loading notes. Please try again')
+        });
   }
 
-  ngOnInit() {
+  ngAfterViewInit() {
     console.log("notes created");
-    this.refreshSubscription = this.appService.currentRefreshStatus.subscribe(() => { this.refreshNotes() });
+    // we use this hook to make sure 'this.gridWrapper' is initialized
+    // since this hook is part of page refresh, we can't do any UI-related operations - hence delaying it to the next loop start
+    setTimeout(
+      () => { this.refreshSubscription = this.appService.currentRefreshStatus.subscribe(() => { this.refreshNotes() }); },
+      0);
   }
 
   ngOnDestroy() {
