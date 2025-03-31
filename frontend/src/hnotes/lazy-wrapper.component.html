@@ -1,8 +1,12 @@
 @if (mode == LazyWrapperMode.Loading) {
-<mat-spinner style="margin:auto"></mat-spinner>
+<div style="align-content: center; height: 100%">
+  <mat-spinner style="margin:auto"></mat-spinner>
+</div>
 }
 @else if(mode == LazyWrapperMode.Error) {
-<p style="margin:auto;font-size:100px;color:#005cbb">?</p>
+<div style="align-content: center; height: 100%">
+  <p style="margin:auto;font-size:100px;color:#005cbb;text-align: center; width: 100%">?</p>
+</div>
 }
 @else if(mode == LazyWrapperMode.Loaded) {
 <ng-content></ng-content>

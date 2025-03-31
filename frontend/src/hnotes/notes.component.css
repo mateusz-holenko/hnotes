@@ -1,9 +1,9 @@
 .notes_grid {
   display: grid;
-  grid-template-columns: 300px 300px 300px 300px;
-  grid-gap: 40px;
-  margin-top: 40px;
-  justify-content: center;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-gap: 10px;
+  margin-left: 40px;
+  margin-right: 40px;
 }
 
 a {
