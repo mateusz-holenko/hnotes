@@ -34,4 +34,13 @@ services:
       NOTES_DB_SERVICE_SERVICE_PORT: 3306
       VERIFICATION_SERVICE_SERVICE_HOST: "verification"
       VERIFICATION_SERVICE_SERVICE_PORT: 5000
+  elastic:
+    image: elasticsearch:8.16.6
+    ports:
+      - 9200:9200
+    environment:
+      - bootstrap.memory_lock=true
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - xpack.security.enrollment.enabled=false
 
