@@ -5,7 +5,7 @@ import { AuthService } from './auth-service';
 @Injectable({providedIn: 'root'})
 export class AuthGuardService implements CanActivate {
   canActivate() {
-    if(this.authService.getJWT() == '') {
+    if(!this.authService.isLoggedIn()) {
       this.router.navigate(['/login']);
       return false;
     }
