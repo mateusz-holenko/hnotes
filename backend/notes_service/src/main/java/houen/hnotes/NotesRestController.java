@@ -83,6 +83,9 @@ public class NotesRestController {
 
     @Autowired
     private VerificationService verificationServiceProxy;
+
+    @Autowired
+    private ElasticSearchService elasticSearchServiceProxy;
   
     @Autowired
     private NotesRepository notesRepository;
@@ -115,6 +118,19 @@ public class NotesRestController {
 
       notesRepository.save(n);
       return new NewNoteResult(n.getId(), n.getCreationTimestamp());
+    }
+    
+    @GetMapping("/test/add/{id}")
+    public void testAddingNote(@PathVariable(value = "id") Integer id) {
+      var note = notesRepository
+        .findById(id).get();
+
+        elasticSearchServiceProxy.add(note);
+    }
+    
+    @GetMapping("/test/search/{query}")
+    public void testQueryingNote(@PathVariable(value = "query") String q) {
+        elasticSearchServiceProxy.search(q);
     }
 
     @GetMapping("/notes")
