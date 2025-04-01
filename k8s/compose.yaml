@@ -43,4 +43,9 @@ services:
       - discovery.type=single-node
       - xpack.security.enabled=false
       - xpack.security.enrollment.enabled=false
+  artemis:
+    image: apache/activemq-artemis:latest-alpine
+    ports:
+      - 61616:61616
+      - 8161:8161
 
