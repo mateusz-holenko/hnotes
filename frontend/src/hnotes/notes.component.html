@@ -1,5 +1,7 @@
 <lazy-wrapper #note_editor_wrapper [mode]=LazyWrapperMode.Loaded>
-  <note-editor (acceptNote)="handleAcceptNote(note_editor_wrapper, $event)" />
+  <div class="new_note_grid">
+    <note-editor class="new_note_editor" (acceptNote)="handleAcceptNote(note_editor_wrapper, $event)" />
+  </div>
 </lazy-wrapper>
 
 <lazy-wrapper #notes_grid_wrapper [mode]=LazyWrapperMode.Loading>

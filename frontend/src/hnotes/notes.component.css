@@ -6,6 +6,13 @@
   margin-right: 40px;
 }
 
-a {
-  color: white;
+.new_note_grid {
+  display: grid;
 }
+
+.new_note_editor {
+  margin: 50px auto;
+  place-self: center;
+  width: 50%;
+}
+
