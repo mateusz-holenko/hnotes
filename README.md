@@ -43,12 +43,12 @@ flowchart TB
         NO["logic"] <--> db[("db")]
     end
 
-    BR[["Artemis / Active MQ"]]
+    BR[["Active MQ Artemis"]]
 
     API --> NO
     API --> US
 
-    NO --> SE
+    SB_NO --> SE
     
     NO <-.-> BR
     VE <-.-> BR
