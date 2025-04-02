@@ -1,11 +1,11 @@
 @if (mode == LazyWrapperMode.Loading) {
-<div style="align-content: center; height: 100%">
+<div id="lazy-wrapper-div">
   <mat-spinner style="margin:auto"></mat-spinner>
 </div>
 }
 @else if(mode == LazyWrapperMode.Error) {
-<div style="align-content: center; height: 100%">
-  <p style="margin:auto;font-size:100px;color:#005cbb;text-align: center; width: 100%">?</p>
+<div id="lazy-wrapper-div">
+  <p id="lazy-wrapper-error">?</p>
 </div>
 }
 @else if(mode == LazyWrapperMode.Loaded) {

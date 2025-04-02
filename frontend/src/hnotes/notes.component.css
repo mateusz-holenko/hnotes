@@ -8,11 +8,14 @@
 
 .new_note_grid {
   display: grid;
+  margin: 50px auto;
 }
 
-.new_note_editor {
-  margin: 50px auto;
+.new_note_wrapper {
   place-self: center;
   width: 50%;
 }
 
+#no-notes-message {
+  text-align: center;
+}
