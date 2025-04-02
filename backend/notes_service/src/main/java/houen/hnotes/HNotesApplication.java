@@ -22,7 +22,7 @@ public class HNotesApplication {
   @Bean
   public CircuitBreakerConfigCustomizer externalServiceVerificationBreakerConfigCustomizer() {
     return CircuitBreakerConfigCustomizer.of(
-      "verification-service",
+      "rest-service",
         builder -> builder
           .slidingWindowSize(5)
           .slidingWindowType(SlidingWindowType.COUNT_BASED)

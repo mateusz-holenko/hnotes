@@ -17,7 +17,7 @@ public class VerificationService {
 
   public record VerificationResult(String status, Integer length) {};
 
-  @CircuitBreaker(name = "verification-service")
+  @CircuitBreaker(name = "rest-service")
   public VerificationResult Check(String content) {
     return restServiceTemplate.postForObject(verificationServiceUrl + "/verificator", content, VerificationResult.class);
   }
