@@ -2,7 +2,7 @@
 
 The place to keep your notes and ideas organized.
 
-![screenshot](screenshot.jpg?raw=true)
+![screenshot](screenshot.png?raw=true)
 
 ## About the project
 
