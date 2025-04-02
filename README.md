@@ -12,6 +12,7 @@ hNotes are experimental; the design might (and probably will) change over time, 
 # Components
 
 In order to keep the development process as simple as possible, I decided to keep all the code in a single repository.
+
 *In a real system it would probably be best to split components into separate repositories and use git submodules, git repo or other tools to bring all the elements together*.
 
 The current structure of the system is depicted in the diagram below:
@@ -30,7 +31,7 @@ flowchart TB
     direction TB
     subgraph NG["nginx"]
         direction TB
-        Angular(["Angular"])
+        Angular(["fronted application"])
         API(["API proxy"])
     end
     US["users"]
@@ -57,9 +58,23 @@ flowchart TB
   U1 --> NG
   UN --> NG
   NG --- ST
+
+  click Angular "https://github.com/mateusz-holenko/hnotes/tree/readme/frontend" "Frontend application source code"
 ```
 
-## Frontend
+## Frontend application
+
+Users interact with the system via the [frontend web application](frontend) implemented in Angular.
+
+It allows user to log into the system, view existing notes and edit them: create new ones, update or delete existing ones.
+
+Under the hood it communicates with [Users](backend/users) and [Notes](backend/notes) services hidden behind the proxy API provided by [nginx](k8s/dockerfiles/frontend/default.conf.template).
+
+Future plans:
+- [ ] Search functionality
+- [ ] Improved login form verification
+- [ ] Websocket connections with [Status](backend/status) service for async updates
+
 ## Notes Service
 ## Users Service
 ## Search Service
@@ -75,3 +90,8 @@ flowchart TB
 ## Kubernetes
 
 # Current status & future plans
+
+## Frontend application
+
+TODO:
+* 
