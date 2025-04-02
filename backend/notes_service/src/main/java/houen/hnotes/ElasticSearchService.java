@@ -18,8 +18,6 @@ public class ElasticSearchService {
   @Value("${hnotes.notes.elasticSearchService.url}")
   private String elasticSearchServiceUrl;
 
-  @Value("${hnotes.notes.elasticSearchService.api-key}")
-  private String elasticSearchServiceApiKey;
 
   @Autowired
   private RestTemplate restServiceTemplate;
