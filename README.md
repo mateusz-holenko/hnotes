@@ -59,8 +59,12 @@ flowchart TB
   UN --> NG
   NG --- ST
 
-  click Angular "https://github.com/mateusz-holenko/hnotes/tree/readme/frontend" "Frontend application source code"
+  click Angular "https://github.com/mateusz-holenko/hnotes/tree/main/frontend" "Frontend application source code"
+  click NS "https://github.com/mateusz-holenko/hnotes/tree/main/backend/notes_service" "Users Service source code"
+  %% click SE "https://github.com/mateusz-holenko/hnotes/tree/main/backend/notes_service" "Users Service source code"
+  click US "https://github.com/mateusz-holenko/hnotes/tree/main/backend/users_service" "Users Service source code"
 ```
+
 
 ## Frontend application
 
@@ -68,16 +72,18 @@ Users interact with the system via the [frontend web application](frontend) impl
 
 It allows user to log into the system, view existing notes and edit them: create new ones, update or delete existing ones.
 
-Under the hood it communicates with [Users](backend/users_service) and [Notes](backend/notes_service) services hidden behind the proxy API provided by [nginx](k8s/dockerfiles/frontend/default.conf.template).
+Under the hood it communicates with [Users](#users-service) and [Notes](#notes-service) services hidden behind the proxy API provided by [nginx](k8s/dockerfiles/frontend/default.conf.template).
 
-Future plans:
+### Future plans
 - [ ] Search functionality
 - [ ] Improved login form verification
-- [ ] Websocket connections with [Status](backend/status_service) service for async updates
+- [ ] Websocket connections with [Status](#status-service) service for async updates
+- [ ] Frontend for managing users
+
 
 ## Notes Service
 
-Notes is the main service in the system exposing API for managing notes.
+`Notes` is the main service in the system exposing API for managing notes.
 *Due to the nature of the system, this service will probably be the most loaded one and should be considered the first to scale horizontally.*
 
 The data itself is kept in a database that is accessed in the code via a [hibernate-based interface](/backend/notes_service/src/main/java/houen/hnotes/NotesRepository.java).
@@ -85,23 +91,50 @@ The data itself is kept in a database that is accessed in the code via a [hibern
 
 To provide a more complex functionality, the service integrates with additional components as described in the following sections.
 
-## Search Service integration
+### Search Service integration
 
-[Serach](backend/notes_service/src/main/java/houen/hnotes/ElasticSearchService.java) support is provided by a third-party service running [ElasticSearch](http://elastic.co).
+[Search](#search-service) support is provided by a third-party service running [ElasticSearch](http://elastic.co).
+
+**WIP**
 
 Each new note added to `Notes` is additionally indexed in `Search` so that it can be later fetched by its content.
 Later, when fetching items from `Notes`, an optional `query` parameter can be passed.
 In such case `Notes` asks `Search` to provide a filtered list that is passed back to the user.
 
-## Verification Service integration
+### Verification Service integration
 
-[Verification](backend/verification_service) is an additional service that checks content of newly added or updated notes looking for [distrurbing patterns](backend/verification_service/veri.py) that should be reported.
+**WIP**
+
+[Verification](#verification-service) is an additional service that checks content of newly added or updated notes looking for [distrurbing patterns](backend/verification_service/veri.py) that should be reported.
 
 The communication between services is asynchronous and carried on via an Apache Artemis message broker.
 
+### Future plans
+- [ ] Improved search integration
+- [ ] Handling and presenting notes verification status
+- [ ] Sharing of notes between users
+- [ ] Versioning of notes
+- [ ] noSQL DBMS support + fully reactive flow
+
+
 ## Users Service
+
+`Users` provides authentication to the system by generating [JWT tokens](https://en.wikipedia.org/wiki/JSON_Web_Token) to be presented when contacting other services in the system.
+*Current implementation of the logic includes trivial password checks (must be the same as the username) as well as hardcoded list of supported users.*
+
+### Future plans
+- [ ] DB integration
+- [ ] API for managing users
+- [ ] External OAuth2 integration
+
+
 ## Search Service
+
+[Search](backend/notes_service/src/main/java/houen/hnotes/ElasticSearchService.java) support is provided by a third-party service running [ElasticSearch](http://elastic.co).
+
 ## Verification Service
+
+[Verification](backend/verification_service) is an additional service that checks content of newly added or updated notes looking for [distrurbing patterns](backend/verification_service/veri.py) that should be reported.
 ## Status Service
 ## Message broker
 ## Monitoring
