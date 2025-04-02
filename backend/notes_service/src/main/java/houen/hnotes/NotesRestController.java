@@ -84,16 +84,16 @@ public class NotesRestController {
     }
     
     @GetMapping("/test/add/{id}")
-    public void testAddingNote(@PathVariable(value = "id") Integer id) {
+    public void testAddingNote(@PathVariable(value = "id") Integer id) throws Exception {
       var note = notesRepository
         .findById(id).get();
 
-        elasticSearchServiceProxy.add(note);
+        elasticSearchServiceProxy.indexNote(note);
     }
     
     @GetMapping("/test/search/{query}")
-    public void testQueryingNote(@PathVariable(value = "query") String q) {
-        elasticSearchServiceProxy.search(q);
+    public String testQueryingNote(@PathVariable(value = "query") String q) throws Exception {
+        return elasticSearchServiceProxy.searchNotes(q);
     }
 
     @GetMapping("/notes")
