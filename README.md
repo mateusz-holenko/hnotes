@@ -2,6 +2,8 @@
 
 The place to keep your notes and ideas organized.
 
+![screenshot](screenshot.jpg?raw=true)
+
 ## About the project
 
 This is a playground project to explore technologies, tools and good patterns to build scalable distributed systems.
@@ -71,7 +73,7 @@ flowchart TB
 
 ## Frontend application
 
-Users interact with the sNotes ystem via the [frontend web application](frontend) implemented in Angular.
+Users interact with the sNotes ystem via the [frontend web application](frontend) implemented in [Angular](https://angular.dev/).
 
 It allows user to log into the system, view existing notes and edit them: create new ones, update or delete existing ones.
 
