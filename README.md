@@ -31,7 +31,7 @@ flowchart TB
     direction TB
     subgraph NG["nginx"]
         direction TB
-        Angular(["fronted application"])
+        Angular(["fronted"])
         API(["API proxy"])
     end
     US["users"]
@@ -68,14 +68,37 @@ Users interact with the system via the [frontend web application](frontend) impl
 
 It allows user to log into the system, view existing notes and edit them: create new ones, update or delete existing ones.
 
-Under the hood it communicates with [Users](backend/users) and [Notes](backend/notes) services hidden behind the proxy API provided by [nginx](k8s/dockerfiles/frontend/default.conf.template).
+Under the hood it communicates with [Users](backend/users_service) and [Notes](backend/notes_service) services hidden behind the proxy API provided by [nginx](k8s/dockerfiles/frontend/default.conf.template).
 
 Future plans:
 - [ ] Search functionality
 - [ ] Improved login form verification
-- [ ] Websocket connections with [Status](backend/status) service for async updates
+- [ ] Websocket connections with [Status](backend/status_service) service for async updates
 
 ## Notes Service
+
+Notes is the main service in the system exposing API for managing notes.
+*Due to the nature of the system, this service will probably be the most loaded one and should be considered the first to scale horizontally.*
+
+The data itself is kept in a database that is accessed in the code via a [hibernate-based interface](/backend/notes_service/src/main/java/houen/hnotes/NotesRepository.java).
+*For the time being, a "standard" SQL DBMS is being used, but to improve future performance a plan is to adpot a noSQL backaned and switch to fully reactive (WebFlux) flow.*
+
+To provide a more complex functionality, the service integrates with additional components as described in the following sections.
+
+## Search Service integration
+
+[Serach](backend/notes_service/src/main/java/houen/hnotes/ElasticSearchService.java) support is provided by a third-party service running [ElasticSearch](http://elastic.co).
+
+Each new note added to `Notes` is additionally indexed in `Search` so that it can be later fetched by its content.
+Later, when fetching items from `Notes`, an optional `query` parameter can be passed.
+In such case `Notes` asks `Search` to provide a filtered list that is passed back to the user.
+
+## Verification Service integration
+
+[Verification](backend/verification_service) is an additional service that checks content of newly added or updated notes looking for [distrurbing patterns](backend/verification_service/veri.py) that should be reported.
+
+The communication between services is asynchronous and carried on via an Apache Artemis message broker.
+
 ## Users Service
 ## Search Service
 ## Verification Service
@@ -85,6 +108,7 @@ Future plans:
 
 # Configuration
 
+## Helper scripts
 ## Docker images
 ## Docker compose
 ## Kubernetes
