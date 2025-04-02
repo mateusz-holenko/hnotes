@@ -50,9 +50,9 @@ flowchart TB
 
     SB_NO --> SE
     
-    NO <-.-> BR
-    VE <-.-> BR
-    ST <-.-> BR 
+    NO <-...-> BR
+    VE <-...-> BR
+    ST <-...-> BR 
    end
 
   U1 --> NG
@@ -65,6 +65,7 @@ flowchart TB
   click ST "https://github.com/mateusz-holenko/hnotes/tree/readme?tab=readme-ov-file#status-service" "Status Service"
   click VE "https://github.com/mateusz-holenko/hnotes/tree/readme?tab=readme-ov-file#verification-service" "Verification Service"
   click BR "https://github.com/mateusz-holenko/hnotes/tree/readme?tab=readme-ov-file#message-broker" "Message Broker"
+  click SE "https://github.com/mateusz-holenko/hnotes/tree/readme?tab=readme-ov-file#search-service" "Search Service"
 ```
 
 
