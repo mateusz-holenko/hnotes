@@ -22,7 +22,7 @@ The current structure of the system is depicted in the diagram below:
 flowchart TB
   direction TB
   subgraph WORLD[" "]
-    direction TB
+    direction LR
     U1["User1"]
     U2["..."]
     UN["UserN"]
@@ -171,20 +171,30 @@ Details on the image and its configuration can be found [here](#docker-compose).
 
 ### Future plans
 - [ ] Expose more metrics from `Notes`
-- [ ] Integrate with a dashboard (grafana/jaeger/etc.)
+- [ ] Integrate with a dashboard (grafana/jeager/etc.)
 - [ ] Write scripts to easily control JMX-based configuration
 
 
-# Configuration
+# Configuration / Scripts
+
+This section describes different helper scripts and configuration files shipped together with the system.
 
 ## Helper scripts
+
+To ease the development, testing and deployment phases [task](https://taskfile.dev) `Taskfile.yml` helper scripts are included for components of the system.
+
+Refer to the help (`task -a`) to learn more about particular commands.
+
 ## Docker images
+
+For the purpose of deployment, each service comes with a custom `Dockerfile` packaging all necessary elements into a container that can later be used by [docker compose](#docker-compose) or [Kubernetes](#kubernetes).
+
 ## Docker compose
+
+[compose.yml](k8s/compose.yml) provides a configuration for running all components of a system in the local environment.
+
 ## Kubernetes
 
-# Current status & future plans
+Kubernetes deployment configuration files [`k8s/*.deployment.yaml`](/k8s) provide configuration for running the system in [Kubernetes](https://kubernetes.io/) cluster using `docker` configuration described in [docker images](#docker-images) section.
+For local testing, see [minikube](https://minikube.sigs.k8s.io).
 
-## Frontend application
-
-TODO:
-* 
