@@ -50,7 +50,7 @@ flowchart TB
 
     SB_NO --> SE
     
-    NO <-...-> BR
+    SB_NO <-...-> BR
     VE <-...-> BR
     ST <-...-> BR 
    end
