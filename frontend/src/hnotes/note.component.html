@@ -1,7 +1,12 @@
 @if(mode == NoteComponentModeType.ReadOnly) {
 <div class="box">
   <div>
-  <p class="title">{{ note.title }} #{{ note.id }}</p>
+  @if(note.title == '') {
+  <p class="title">note #{{ note.id }}</p>
+  }
+  @else {
+  <p class="title">{{ note.title }}</p>
+  }
   <p>{{ note.content }}</p>
   </div>
   @if (buttonsVisible) {
@@ -15,10 +20,5 @@
 @else if(mode == NoteComponentModeType.Editable) {
 <div class="editable">
   <note-editor [note]=note (acceptNote)="handleAcceptNote($event)" />
-</div>
-}
-@else {
-<div class="box">
-  <p style="margin:auto;font-size:100px;color:#005cbb">?</p>
 </div>
 }

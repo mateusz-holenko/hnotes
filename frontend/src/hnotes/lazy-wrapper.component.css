@@ -1,1 +1,16 @@
+#lazy-wrapper-div {
+  height: 100%;
+  display: flex;
+}
 
+mat-spinner {
+  align-self: center;
+}
+
+#lazy-wrapper-error {
+  margin:auto;
+  font-size:100px;
+  color:#005cbb;
+  text-align: center;
+  width: 100%;
+}
