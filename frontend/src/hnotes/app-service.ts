@@ -13,7 +13,7 @@ export class AppService {
   }
 
   showError(text: string) {
-    this.snackBar.open(text, 'Close');
+    this.snackBar.open(text, 'Close', {panelClass: ['error-snackbar']});
   }
 
   closeError() {
