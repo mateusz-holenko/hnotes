@@ -91,7 +91,7 @@ public class NotesRestController {
     }
     
     @GetMapping("/test/search/{query}")
-    public String testQueryingNote(@PathVariable(value = "query") String q) throws Exception {
+    public Integer[] testQueryingNote(@PathVariable(value = "query") String q) throws Exception {
         return elasticSearchServiceProxy.searchNotes(q);
     }
 

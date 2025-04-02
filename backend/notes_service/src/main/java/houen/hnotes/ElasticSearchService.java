@@ -10,6 +10,8 @@ import org.springframework.web.client.RestTemplate;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 
+import java.util.ArrayList;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -45,7 +47,7 @@ public class ElasticSearchService {
   }
 
   @CircuitBreaker(name = "rest-service")
-  public String searchNotes(String content) throws Exception {
+  public Integer[] searchNotes(String content) throws Exception {
     var query = new JSONObject()
       .put("query", new JSONObject()
         .put("bool", new JSONObject()
@@ -65,6 +67,14 @@ public class ElasticSearchService {
     var url = elasticSearchServiceUrl + "note/_search";
     var result = restServiceTemplate.exchange(url, HttpMethod.POST, entity, String.class);
     var str = result.getBody();
-    return new JSONObject(str).toString();
+    var json = new JSONObject(str);
+    var hits = json.getJSONObject("hits").getJSONArray("hits");
+
+    var links = new ArrayList<Integer>();
+    for(int i = 0; i < hits.length(); i++) {
+      Integer id = Integer.parseInt(hits.getJSONObject(i).getString("_id"));
+      links.add(id);
+    }
+    return links.toArray(new Integer[links.size()]);
   }
 }
