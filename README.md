@@ -62,8 +62,8 @@ flowchart TB
   click FR "https://github.com/mateusz-holenko/hnotes/tree/readme?tab=readme-ov-file#frontend-application" "Frontend application"
   click NO "https://github.com/mateusz-holenko/hnotes/tree/readme?tab=readme-ov-file#notes-service" "Notes Service"
   click US "https://github.com/mateusz-holenko/hnotes/tree/readme?tab=readme-ov-file#users-service" "Users Service"
-  click US "https://github.com/mateusz-holenko/hnotes/tree/readme?tab=readme-ov-file#status-service" "Status Service"
-  click VS "https://github.com/mateusz-holenko/hnotes/tree/readme?tab=readme-ov-file#verification-service" "Verification Service"
+  click ST "https://github.com/mateusz-holenko/hnotes/tree/readme?tab=readme-ov-file#status-service" "Status Service"
+  click VE "https://github.com/mateusz-holenko/hnotes/tree/readme?tab=readme-ov-file#verification-service" "Verification Service"
   click BR "https://github.com/mateusz-holenko/hnotes/tree/readme?tab=readme-ov-file#message-broker" "Message Broker"
 ```
 
