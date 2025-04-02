@@ -23,24 +23,24 @@ flowchart TB
   direction TB
   subgraph WORLD[" "]
     direction LR
-    U1["User1"]
-    U2["..."]
     UN["UserN"]
+    U2["..."]
+    U1["User1"]
   end
   subgraph HN["hnotes"]
     direction TB
     subgraph NG["nginx"]
         direction TB
-        Angular(["fronted"])
+        FR(["fronted"])
         API(["API proxy"])
     end
     US["users"]
     ST["status"]
     VE["verification"]
     SE["search"]
-    subgraph NO["notes"]
+    subgraph SB_NO["notes"]
         direction LR
-        logic <--> db[("db")]
+        NO["logic"] <--> db[("db")]
     end
 
     BR[["Artemis / Active MQ"]]
@@ -59,16 +59,18 @@ flowchart TB
   UN --> NG
   NG --- ST
 
-  click Angular "https://github.com/mateusz-holenko/hnotes/tree/main/frontend" "Frontend application source code"
-  click logic "https://github.com/mateusz-holenko/hnotes/tree/main/backend/notes_service" "Notes Service source code"
-  %% click SE "https://github.com/mateusz-holenko/hnotes/tree/main/backend/notes_service" "Users Service source code"
-  click US "https://github.com/mateusz-holenko/hnotes/tree/main/backend/users_service" "Users Service source code"
+  click FR "https://github.com/mateusz-holenko/hnotes/tree/readme?tab=readme-ov-file#frontend-application" "Frontend application"
+  click NO "https://github.com/mateusz-holenko/hnotes/tree/readme?tab=readme-ov-file#notes-service" "Notes Service"
+  click US "https://github.com/mateusz-holenko/hnotes/tree/readme?tab=readme-ov-file#users-service" "Users Service"
+  click US "https://github.com/mateusz-holenko/hnotes/tree/readme?tab=readme-ov-file#status-service" "Status Service"
+  click VS "https://github.com/mateusz-holenko/hnotes/tree/readme?tab=readme-ov-file#verification-service" "Verification Service"
+  click BR "https://github.com/mateusz-holenko/hnotes/tree/readme?tab=readme-ov-file#message-broker" "Message Broker"
 ```
 
 
 ## Frontend application
 
-Users interact with the system via the [frontend web application](frontend) implemented in Angular.
+Users interact with the sNotes ystem via the [frontend web application](frontend) implemented in Angular.
 
 It allows user to log into the system, view existing notes and edit them: create new ones, update or delete existing ones.
 
