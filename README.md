@@ -57,7 +57,7 @@ flowchart TB
 
   U1 --> NG
   UN --> NG
-  NG --- ST
+  NG <---> ST
 
   click FR "https://github.com/mateusz-holenko/hnotes/tree/readme?tab=readme-ov-file#frontend-application" "Frontend application"
   click NO "https://github.com/mateusz-holenko/hnotes/tree/readme?tab=readme-ov-file#notes-service" "Notes Service"
@@ -76,6 +76,8 @@ Users interact with the sNotes ystem via the [frontend web application](frontend
 It allows user to log into the system, view existing notes and edit them: create new ones, update or delete existing ones.
 
 Under the hood it communicates with [Users](#users-service) and [Notes](#notes-service) services hidden behind the proxy API provided by [nginx](k8s/dockerfiles/frontend/default.conf.template).
+
+Uses [Angular Material](https://material.angular.io/) components.
 
 ### Future plans
 - [ ] Search functionality
@@ -181,6 +183,8 @@ Details on the image and its configuration can be found [here](#docker-compose).
 # Configuration / Scripts
 
 This section describes different helper scripts and configuration files shipped together with the system.
+
+Each service provides a `shell.nix` script for creating reproducible [Nix](https://nixos.org) build environment.
 
 ## Helper scripts
 
