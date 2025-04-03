@@ -1,0 +1,20 @@
+# https://taskfile.dev
+
+version: '3'
+
+tasks:
+  check:
+    cmds:
+      - |-
+        bash << 'EOF'
+        source .venv/bin/activate
+        pylint --disable=C0114,C0115,C0116 veri.py
+        EOF
+  run:
+    cmds:
+      - |-
+        bash << 'EOF'
+        source .venv/bin/activate
+        flask --app veri run --host=0.0.0.0
+        EOF
+
