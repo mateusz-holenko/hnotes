@@ -20,7 +20,7 @@ export class NoteComponent implements OnInit {
   @Input({required: true}) note!: NoteResult;
   @Input() mode: NoteComponentMode = NoteComponentMode.ReadOnly;
 
-  @Output() deleteNote = new EventEmitter<Number>();
+  @Output() deleteNote = new EventEmitter<number>();
   @Output() acceptNote = new EventEmitter<NoteResult>();
 
   private editForm = new FormGroup({
