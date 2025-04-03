@@ -28,19 +28,6 @@ import org.springframework.data.domain.Sort;
 @CrossOrigin(origins = "*")
 public class NotesRestController {
     @Autowired
-    private ArtemisService artemisService;
-    
-    @GetMapping("/artemis/send/{text}")
-    public void artemisSend(@PathVariable(value = "text") String text) {
-      artemisService.send(text);
-    }
-    
-    @GetMapping("/artemis/receive")
-    public String artemisReceive() {
-      return artemisService.receive();
-    }
-  
-    @Autowired
     private NotesRestControllerOptions options;
 
     @Autowired
