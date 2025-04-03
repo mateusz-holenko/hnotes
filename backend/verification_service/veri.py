@@ -4,6 +4,7 @@ from logging.config import dictConfig
 
 import json
 import stomp
+import logging
 
 
 dictConfig({
@@ -39,7 +40,6 @@ def connect_to_artemis():
     c.connect('artemis', 'artemis', wait=True)
     c.subscribe(destination='verification.queue', id=1)
 
-    # app.logger.debug('Connected to the message broker')
     return c
 
 
@@ -68,7 +68,12 @@ def maybe_error():
 
 
 CTR = 0
-connect_to_artemis()
+try:
+    connect_to_artemis()
+except stomp.exception.ConnectFailedException:
+    logger = logging.getLogger(__name__)
+    logger.error("Couldn't connect to Artemis")
+
 app = Flask(__name__)
 
 
