@@ -1,1 +1,4 @@
 flask
+pyflakes
+pylint
+stomp.py
