@@ -16,9 +16,4 @@ public class NotesArtemisDebugController {
     public void artemisSend(@PathVariable(value = "text") String text) {
       artemisService.send(text);
     }
-
-    @GetMapping("/artemis/receive")
-    public String artemisReceive() {
-      return artemisService.receive();
-    }
 }
