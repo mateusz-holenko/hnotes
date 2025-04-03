@@ -26,7 +26,7 @@ services:
       - 3306:3306
   notes:
     build:
-      context: dockerfiles/notes
+      context: ../backend/notes_service
     ports:
       - 8080:8080
     environment:
