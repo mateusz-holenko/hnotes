@@ -37,14 +37,6 @@ public class ArtemisService {
     });
   }
 
-  public String receive() {
-    try {
-    var msg = (TextMessage) t.receive("testdest");
-    return msg.getText();
-    } catch (Exception e) {
-      return "[EXCEPTION]";
-    }
-  }
   @JmsListener(destination = "verification-result.queue")
   public void processMessage(String content) {
     var logger = LoggerFactory.getLogger(NotesRestController.class);
