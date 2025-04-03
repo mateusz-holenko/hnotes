@@ -1,12 +1,28 @@
-# https://taskfile.dev
-
 version: '3'
 
-vars:
-  GREETING: Hello, World!
+includes:
+  frontend:
+    taskfile: ./frontend/Taskfile.yml
+    dir: ./frontend
+  users:
+    taskfile: ./backend/users_service/Taskfile.yml
+    dir: ./backend/users_service
+  verification:
+    taskfile: ./backend/verification_service/Taskfile.yml
+    dir: ./backend/verification_service
+  notes:
+    taskfile: ./backend/notes_service/Taskfile.yml
+    dir: ./backend/notes_service
 
 tasks:
-  default:
+  docker-run-all:
+    dir: k8s
+    deps:
+      - frontend:docker-build
+      - users:docker-build
+      - verification:docker-build
+      - notes:docker-build-db
+      - notes:docker-build
     cmds:
-      - echo "{{.GREETING}}"
-    silent: true
+      - docker compose up --detach
+      - lazydocker

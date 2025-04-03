@@ -2,9 +2,9 @@ FROM python:3.10-alpine
 WORKDIR /app
 
 COPY requirements.txt /app
-RUN pip3 install -r requirements.txt
+COPY ./veri.py /app/veri.py
 
-COPY app/* /app
+RUN pip3 install -r requirements.txt
 
 EXPOSE 5000
 ENTRYPOINT ["flask", "--app", "veri", "run", "--host=0.0.0.0"]

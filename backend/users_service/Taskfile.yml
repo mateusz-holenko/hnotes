@@ -1,0 +1,13 @@
+version: '3'
+
+tasks:
+  build:
+    cmds:
+      - nix-shell --run "mvn package"
+  run:
+    cmds:
+      - nix-shell --run "./mvnw spring-boot:run"
+  docker-build:
+    deps: [build]
+    cmds:
+      - docker build -t hnotes.users .

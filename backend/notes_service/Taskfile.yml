@@ -15,7 +15,10 @@ tasks:
       VERIFICATION_SERVICE_PORT: 5000
     cmds:
       - nix-shell --run "./mvnw spring-boot:run"
-  docker:
+  docker-build:
     deps: [build]
     cmds:
-      - docker build -t hnotes.notes .
+      - docker build -t hnotes.notes -f ./Dockerfile .
+  docker-build-db:
+    cmds:
+      - docker build -t hnotes.notes-db -f ./Db.Dockerfile .

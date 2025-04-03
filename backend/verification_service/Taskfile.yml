@@ -17,4 +17,6 @@ tasks:
         source .venv/bin/activate
         flask --app veri run --host=0.0.0.0
         EOF
-
+  docker-build:
+    cmds:
+      - docker build -t hnotes.verification .

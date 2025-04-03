@@ -1,7 +1,6 @@
 services:
   frontend:
-    build:
-      context: dockerfiles/frontend
+    image: hnotes.frontend
     ports:
       - 80:80
     environment:
@@ -10,23 +9,19 @@ services:
       USERS_SERVICE_SERVICE_HOST: "users"
       USERS_SERVICE_SERVICE_PORT: 8090
   users:
-    build:
-      context: dockerfiles/users
+    image: hnotes.users
     ports:
       - 8090:8090
   verification:
-    build:
-      context: dockerfiles/verification
+    image: hnotes.verification
     ports:
       - 5000:5000
   notes-db:
-    build:
-      context: dockerfiles/notes-db
+    image: hnotes.notes-db
     ports:
       - 3306:3306
   notes:
-    build:
-      context: ../backend/notes_service
+    image: hnotes.notes
     ports:
       - 8080:8080
     environment:

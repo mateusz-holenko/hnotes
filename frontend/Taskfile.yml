@@ -11,13 +11,14 @@ tasks:
     cmds:
       - nix-shell --run "ng serve --configuration development"
   docker-build:
+    deps: [build-dev]
     cmds:
       - docker build -t hnotes.frontend .
   k8s-deploy:
     deps: [docker-build]
     cmds:
-    	- minikube-linux-amd64 kubectl -- delete deployment nginx-deployment --ignore-not-found
-    	- minikube-linux-amd64 image rm hnotes.frontend
-    	- minikube-linux-amd64 image load hnotes.frontend
-    	- minikube-linux-amd64 kubectl -- replace --force -f ../k8s/nginx.deployment.yaml
+      - "minikube-linux-amd64 kubectl -- delete deployment nginx-deployment --ignore-not-found"
+      - "minikube-linux-amd64 image rm hnotes.frontend"
+      - "minikube-linux-amd64 image load hnotes.frontend"
+      - "minikube-linux-amd64 kubectl -- replace --force -f ../k8s/nginx.deployment.yaml"
       
