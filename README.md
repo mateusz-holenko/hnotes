@@ -207,3 +207,20 @@ For the purpose of deployment, each service comes with a custom `Dockerfile` pac
 Kubernetes deployment configuration files [`k8s/*.deployment.yaml`](/k8s) provide configuration for running the system in [Kubernetes](https://kubernetes.io/) cluster using `docker` configuration described in [docker images](#docker-images) section.
 For local testing, see [minikube](https://minikube.sigs.k8s.io).
 
+# Tools
+
+A list of tools used during development:
+
+* helix
+* zellij
+* task
+* lazygit
+* lazydocker
+* docker + docker compose
+* kubernetes
+* minikube
+* http-prompt
+* tavern-ci
+* selenium
+* nix
+* Python virtualenv
