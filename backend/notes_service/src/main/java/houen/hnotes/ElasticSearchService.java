@@ -20,7 +20,6 @@ public class ElasticSearchService {
   @Value("${hnotes.notes.elasticSearchService.url}")
   private String elasticSearchServiceUrl;
 
-
   @Autowired
   private RestTemplate restServiceTemplate;
 
