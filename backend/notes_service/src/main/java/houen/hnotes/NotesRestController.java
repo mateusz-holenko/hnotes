@@ -59,7 +59,7 @@ public class NotesRestController {
     record NewNoteResult(Integer id, Instant creationTimestamp) {};
     
     @PostMapping("/notes")
-    public NewNoteResult addNote(@RequestBody Note n) {
+    public NewNoteResult addNote(@RequestBody Note n) throws Exception {
       var logger = LoggerFactory.getLogger(NotesRestController.class);
       var verificationResult = verificationServiceProxy.Check(n.getContent());
       logger.error("Verification result is: " + verificationResult.toString());
@@ -70,24 +70,12 @@ public class NotesRestController {
       options.waitOnCreate();
 
       notesRepository.save(n);
+      elasticSearchServiceProxy.indexNote(n);
       return new NewNoteResult(n.getId(), n.getCreationTimestamp());
-    }
-    
-    @GetMapping("/test/add/{id}")
-    public void testAddingNote(@PathVariable(value = "id") Integer id) throws Exception {
-      var note = notesRepository
-        .findById(id).get();
-
-        elasticSearchServiceProxy.indexNote(note);
-    }
-    
-    @GetMapping("/test/search/{query}")
-    public Integer[] testQueryingNote(@PathVariable(value = "query") String q) throws Exception {
-        return elasticSearchServiceProxy.searchNotes(q);
     }
 
     @GetMapping("/notes")
-    public Iterable<Note> getNotes(Principal p, @RequestParam(value = "limit", defaultValue = "10") Integer limit, @RequestParam(value = "page", defaultValue = "0") Integer page) {
+    public Iterable<Note> getNotes(Principal p, @RequestParam(value = "limit", defaultValue = "10") Integer limit, @RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam(value = "query", defaultValue = "") String query) throws Exception {
       var logger = LoggerFactory.getLogger(NotesRestController.class);
 
       if(p != null) {
@@ -98,6 +86,11 @@ public class NotesRestController {
       
       options.waitOnFetch();
 
+      if(query.length() > 0) {
+        var ids = elasticSearchServiceProxy.searchNotes(query);
+        // TODO: retrieve notes in batch from a DB and return
+      }
+
       var result = notesRepository
         .findAll(PageRequest.of(page, limit, Sort.by("lastModificationTimestamp").descending()));
       return result.getContent();
@@ -106,13 +99,14 @@ public class NotesRestController {
     record EditedNoteResult(Instant lastModificationTimestamp) {};
 
     @PutMapping("/notes/{id}")
-    public EditedNoteResult editNote(@PathVariable("id") int id, @RequestBody Note n) {
+    public EditedNoteResult editNote(@PathVariable("id") int id, @RequestBody Note n) throws Exception {
       ensureNoteExists(id);
       
       options.waitOnUpdate();
 
       n.setId(id);
       notesRepository.save(n);
+      elasticSearchServiceProxy.indexNote(n);
 
       return new EditedNoteResult(n.getLastModificationTimestamp());
     }
