@@ -45,18 +45,17 @@ public class ArtemisService {
       return "[EXCEPTION]";
     }
   }
+  @JmsListener(destination = "verification-result.queue")
+  public void processMessage(String content) {
+    var logger = LoggerFactory.getLogger(NotesRestController.class);
 
-	@JmsListener(destination = "verification-result.queue")
-	public void processMessage(String content) {
-	  var logger = LoggerFactory.getLogger(NotesRestController.class);
-	  
-	  // TODO: this should be done by some generic STOMP handler
-	  var str = Stream.of(content.split(","))
-	    .map(x -> (new Character((char)Integer.parseInt(x)).toString()))
-	    .collect(Collectors.joining());
-	  var json = new JSONObject(str);
-	  
-	  logger.error("received!!! " + json);
-	}
+    // TODO: this should be done by some generic STOMP handler
+    var str = Stream.of(content.split(","))
+      .map(x -> (new Character((char)Integer.parseInt(x)).toString()))
+      .collect(Collectors.joining());
+    var json = new JSONObject(str);
+
+    logger.error("received!!! " + json);
+  }
 }
 
