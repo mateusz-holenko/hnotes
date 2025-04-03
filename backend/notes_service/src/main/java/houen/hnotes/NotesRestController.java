@@ -26,6 +26,10 @@ import org.springframework.data.domain.Sort;
 
 @RestController
 @CrossOrigin(origins = "*")
+/* TODO:
+  * handle errors
+  * extract business logic outside the controller
+*/
 public class NotesRestController {
     @Autowired
     private NotesRestControllerOptions options;
@@ -87,6 +91,7 @@ public class NotesRestController {
       var logger = LoggerFactory.getLogger(NotesRestController.class);
 
       if(p != null) {
+        // TODO: user principal to filter notes
         var name = p.getName();
         logger.error("Principal name: " + name);
       }
@@ -119,6 +124,7 @@ public class NotesRestController {
       options.waitOnRemove();
       
       notesRepository.deleteById(id);
+      // TODO: remove from elastic search index
     }
 
     private void ensureNoteExists(int id) {
