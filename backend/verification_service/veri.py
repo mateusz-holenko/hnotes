@@ -3,7 +3,7 @@ import logging
 from logging.config import dictConfig
 import stomp
 
-from flask import Flask, request, Response
+from flask import Flask, request, Response, session
 from werkzeug.exceptions import InternalServerError
 
 
@@ -61,13 +61,13 @@ def do_verification(text: str) -> bool:
 
 
 def maybe_error():
-    global CTR
-    CTR += 1
-    if CTR % 5 == 0:
+    ctr = session.get('counter', 0)
+    ctr += 1
+    session['counter'] = ctr
+    if ctr % 5 != 0:
         raise InternalServerError('Encountered an internal error, pls try again later')
 
 
-CTR = 0
 try:
     connect_to_artemis()
 except stomp.exception.ConnectFailedException:
