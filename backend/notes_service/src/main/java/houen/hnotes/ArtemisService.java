@@ -22,6 +22,9 @@ import org.json.JSONObject;
 @Service
 public class ArtemisService {
 
+  private static final String VerificationQueueName = "verification.queue";
+  private static final String VerificationResultQueueName = "verification-result.queue";
+
   private final JmsTemplate t;
 
   @Autowired
@@ -30,14 +33,14 @@ public class ArtemisService {
   }
 
   public void send(String text) {
-    t.send("verification.queue", new MessageCreator() {
+    t.send(ArtemisService.VerificationQueueName, new MessageCreator() {
       public Message createMessage(Session session) throws JMSException {
         return session.createTextMessage(text);
       }
     });
   }
 
-  @JmsListener(destination = "verification-result.queue")
+  @JmsListener(destination = ArtemisService.VerificationResultQueueName)
   public void processMessage(String content) {
     var logger = LoggerFactory.getLogger(NotesRestController.class);
 
