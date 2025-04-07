@@ -14,6 +14,6 @@ public class NotesArtemisDebugController {
 
     @GetMapping("/artemis/send/{text}")
     public void artemisSend(@PathVariable(value = "text") String text) {
-      artemisService.send(text);
+      artemisService.send(new NoteVerificationRequest(0, text, text));
     }
 }

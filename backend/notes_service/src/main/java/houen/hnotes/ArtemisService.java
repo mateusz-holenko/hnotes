@@ -32,10 +32,10 @@ public class ArtemisService {
     this.t = jmsTemplate;
   }
 
-  public void send(String text) {
+  public void send(NoteVerificationRequest request) {
     t.send(ArtemisService.VerificationQueueName, new MessageCreator() {
       public Message createMessage(Session session) throws JMSException {
-        return session.createTextMessage(text);
+        return session.createTextMessage(JSONObject.valueToString(request));
       }
     });
   }
