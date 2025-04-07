@@ -1,10 +1,10 @@
+import json
+import logging
+from logging.config import dictConfig
+import stomp
+
 from flask import Flask, request, Response
 from werkzeug.exceptions import InternalServerError
-from logging.config import dictConfig
-
-import json
-import stomp
-import logging
 
 
 dictConfig({
