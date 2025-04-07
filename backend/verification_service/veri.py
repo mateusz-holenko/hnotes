@@ -1,3 +1,4 @@
+import os
 import json
 import logging
 from logging.config import dictConfig
@@ -34,7 +35,9 @@ class VerificationQueueListener(stomp.ConnectionListener):
 
 
 def connect_to_artemis():
-    c = stomp.Connection([('localhost', 61616)], heartbeats=(4000, 4000))
+    artemis_host = os.environ.get('HNOTES_ARTEMIS_HOST', 'localhost')
+    artemis_port = os.environ.get('HNTOES_ARTEMIS_PORT', 61616)
+    c = stomp.Connection([(artemis_host, artemis_port)], heartbeats=(4000, 4000))
     c.set_listener('', VerificationQueueListener(c))
 
     c.connect('artemis', 'artemis', wait=True)
