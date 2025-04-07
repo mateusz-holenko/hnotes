@@ -97,4 +97,3 @@ def verify_input():
 @app.route('/error')
 def get_error():
     return Response('there seems to be an error', 500)
-
