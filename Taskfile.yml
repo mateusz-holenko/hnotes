@@ -13,9 +13,13 @@ includes:
   notes:
     taskfile: ./backend/notes_service/Taskfile.yml
     dir: ./backend/notes_service
+  artemis:
+    taskfile: ./k8s/artemis_broker/Taskfile.yml
+    dir: ./k8s/artemis_broker
 
 tasks:
   docker-run-all:
+    desc: Run all services in Docker
     dir: k8s
     deps:
       - frontend:docker-build
@@ -23,6 +27,7 @@ tasks:
       - verification:docker-build
       - notes:docker-build-db
       - notes:docker-build
+      - artemis:docker-build
     cmds:
       - docker compose up --detach
       - lazydocker

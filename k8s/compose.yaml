@@ -48,7 +48,7 @@ services:
       - cluster.routing.allocation.disk.watermark.high=200mb
       - cluster.routing.allocation.disk.watermark.flood_stage=200mb
   artemis:
-    image: apache/activemq-artemis:latest-alpine
+    image: hnotes.artemis
     ports:
       - 61616:61616
       - 8161:8161
