@@ -16,6 +16,9 @@ services:
     image: hnotes.verification
     ports:
       - 5000:5000
+    environment:
+      HNOTES_ARTEMIS_HOST: "artemis"
+      HNOTES_ARTEMIS_PORT: 61616
   notes-db:
     image: hnotes.notes-db
     ports:
