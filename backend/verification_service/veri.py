@@ -58,10 +58,7 @@ def do_verification(text: str) -> bool:
             accepted = False
             break
 
-    return {
-        'status': 'accepted' if accepted else 'rejected',
-        'length': len(text)
-    }
+    return accepted
 
 
 def maybe_error():
@@ -96,7 +93,11 @@ def verify_input():
     maybe_error()
 
     txt = str(request.data)
-    result = do_verification(txt)
+    accepted = do_verification(txt)
+    result = {
+        'status': 'accepted' if accepted else 'rejected',
+        'length': len(txt)
+    }
 
     app.logger.info('Input is: %s; result is: %s', input, str(result))
 
