@@ -14,9 +14,6 @@ import jakarta.jms.TextMessage;
 import jakarta.jms.Session;
 import jakarta.jms.JMSException;
 
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import org.json.JSONObject;
 
 @Service
@@ -44,14 +41,11 @@ public class ArtemisService {
   @JmsListener(destination = ArtemisService.VerificationResultQueueName)
   public void processMessage(String content) {
     var logger = LoggerFactory.getLogger(NotesRestController.class);
+    logger.error("received raw >" + content + "<");
 
-    // TODO: this should be done by some generic STOMP handler
-    var str = Stream.of(content.split(","))
-      .map(x -> (new Character((char)Integer.parseInt(x)).toString()))
-      .collect(Collectors.joining());
-    var json = new JSONObject(str);
+    var json = new JSONObject(content);
 
-    logger.error("received!!! " + json);
+    logger.error("received decoded >" + json + "<");
   }
 }
 
