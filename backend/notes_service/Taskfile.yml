@@ -13,6 +13,10 @@ tasks:
       DB_NAME: notesdatabase
       VERIFICATION_SERVICE_HOST: localhost
       VERIFICATION_SERVICE_PORT: 5000
+      ARTEMIS_HOST: localhost
+      ARTEMIS_PORT: 61616
+      ELASTIC_SERVICE_HOST: localhost
+      ELASTIC_SERVICE_PORT: 9200
     cmds:
       - nix-shell --run "./mvnw spring-boot:run"
   docker-build:
