@@ -27,9 +27,15 @@ class VerificationQueueListener(stomp.ConnectionListener):
 
 
     def on_message(self, frame):
-        app.logger.debug('received a verification request for: %s', frame.body)
+        msg = json.loads(frame.body)
+        app.logger.debug('received a verification request for: %s', msg)
 
-        result = do_verification(frame.body)
+        accepted = do_verification(msg['title']) and do_verification(msg['content'])
+
+        result = {
+            'id': msg['id'],
+            'status': 'accepted' if accepted else 'rejected'
+        }
 
         self.connection.send(body=json.dumps(result), destination='verification-result.queue')
         app.logger.debug('done')
