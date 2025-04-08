@@ -3,6 +3,7 @@ import json
 import logging
 from logging.config import dictConfig
 import stomp
+import time
 
 from flask import Flask, request, Response, session
 from werkzeug.exceptions import InternalServerError
@@ -71,11 +72,16 @@ def maybe_error():
         raise InternalServerError('Encountered an internal error, pls try again later')
 
 
-try:
-    connect_to_artemis()
-except stomp.exception.ConnectFailedException:
-    logger = logging.getLogger(__name__)
-    logger.error("Couldn't connect to Artemis")
+connected = False
+logger = logging.getLogger(__name__)
+while not connected:
+    try:
+        connect_to_artemis()
+        connected = True
+        logger.info("Connected to Artemis!")
+    except stomp.exception.ConnectFailedException:
+        logger.error("Couldn't connect to Artemis. Will retry in 5 seconds")
+        time.sleep(5)
 
 app = Flask(__name__)
 
