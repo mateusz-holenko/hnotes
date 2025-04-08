@@ -35,7 +35,8 @@ public class ArtemisService {
   public void send(NoteVerificationRequest request) {
     t.send(ArtemisService.VerificationQueueName, new MessageCreator() {
       public Message createMessage(Session session) throws JMSException {
-        return session.createTextMessage(JSONObject.valueToString(request));
+        var requestAsJSON = new JSONObject(request);
+        return session.createTextMessage(requestAsJSON.toString());
       }
     });
   }
