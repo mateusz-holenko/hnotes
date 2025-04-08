@@ -1,20 +1,18 @@
 package houen.hnotes;
 
-import org.springframework.stereotype.Service;
+import java.io.Serializable;
 
+import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
+import org.springframework.stereotype.Service;
 
-import jakarta.jms.Message;
-import jakarta.jms.TextMessage;
-import jakarta.jms.Session;
 import jakarta.jms.JMSException;
-
-import org.json.JSONObject;
+import jakarta.jms.Message;
+import jakarta.jms.Session;
 
 @Service
 public class ArtemisService {
