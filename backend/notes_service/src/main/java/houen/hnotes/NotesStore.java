@@ -30,7 +30,7 @@ public class NotesStore {
     }
 
     public void createDummyNotes() throws Exception {
-      var innerNotes = new ArrayList<Note>();
+      notesRepository.deleteAll();
       for(int i = 0; i < 15; i++) {
         var n = new Note();
         n.setTitle(String.format("Note #%d", i));
@@ -38,8 +38,6 @@ public class NotesStore {
 
         addNote(n);
       }
-      notesRepository.deleteAll();
-      notesRepository.saveAll(innerNotes);
     }
 
     public NewNoteResult addNote(Note n) throws Exception {
