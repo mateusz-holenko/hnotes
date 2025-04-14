@@ -70,4 +70,18 @@ public class ArtemisServiceTests {
 
     Assertions.assertEquals(1, artemisService.NumberOfProcessedMessages);
   }
+
+  @Test
+  public void receiveMessage_WithProperContent_ShouldAcceptNote() throws Exception {
+    var n = new Note();
+    n.setTitle("title");
+    n.setContent("content");
+    notesStore.addNote(n);
+
+    var currentNotes = notesStore.getNotes(null, 100, 1, "").toArray();
+
+    Assertions.assertEquals(1, currentNotes.length);
+    Assertions.assertEquals(0, currentNotes[0].getId());
+    Assertions.assertEquals(NoteStatus.UNVERIFIED, currentNotes[0].getStatus();
+  }
 }

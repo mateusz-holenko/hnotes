@@ -21,6 +21,8 @@ public class Note {
 
   private String content;
 
+  private NoteStatus status;
+
   @CreationTimestamp(source = SourceType.DB)
   private Instant creationTimestamp;
 
@@ -57,5 +59,13 @@ public class Note {
 
   public Instant getLastModificationTimestamp() {
     return this.lastModificationTimestamp;
+  }
+
+  public NoteStatus getStatus() {
+  	return status;
+  }
+
+  public void setStatus(NoteStatus status) {
+  	this.status = status;
   }
 }
