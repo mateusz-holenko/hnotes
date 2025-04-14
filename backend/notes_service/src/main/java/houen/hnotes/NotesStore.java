@@ -29,6 +29,10 @@ public class NotesStore {
       logger = LoggerFactory.getLogger(NotesRestController.class);
     }
 
+    public void clear() {
+      notesRepository.deleteAll();
+    }
+
     public void createDummyNotes() throws Exception {
       notesRepository.deleteAll();
       for(int i = 0; i < 15; i++) {
