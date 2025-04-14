@@ -30,6 +30,12 @@
     <java.version>17</java.version>
   </properties>
   <dependencies>
+    <!-- https://mvnrepository.com/artifact/com.puppycrawl.tools/checkstyle -->
+    <dependency>
+      <groupId>com.puppycrawl.tools</groupId>
+      <artifactId>checkstyle</artifactId>
+      <version>10.23.0</version>
+    </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
