@@ -29,6 +29,13 @@ public class Note {
   @UpdateTimestamp(source = SourceType.DB)
   private Instant lastModificationTimestamp;
 
+  public Note() { }
+
+  public Note(String title, String content) {
+    this.title = title;
+    this.content = content;
+  }
+
   public Integer getId() {
     return this.id;
   }
