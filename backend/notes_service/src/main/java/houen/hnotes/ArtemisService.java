@@ -3,6 +3,7 @@ package houen.hnotes;
 import java.io.Serializable;
 
 import org.json.JSONObject;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
@@ -23,13 +24,18 @@ public class ArtemisService {
   private final JmsTemplate t;
   private final NotesStore n;
 
+  private final Logger logger;
+
   @Autowired
   public ArtemisService(JmsTemplate jmsTemplate, NotesStore notesStore) {
     this.t = jmsTemplate;
     this.n = notesStore;
+
+    logger = LoggerFactory.getLogger(ArtemisService.class);
   }
 
   public void send(NoteVerificationRequest request) {
+    logger.info("Sending verification request for note #{}", request.getId());
     t.send(ArtemisService.VerificationQueueName, new MessageCreator() {
       public Message createMessage(Session session) throws JMSException {
         var requestAsJSON = new JSONObject(request);
@@ -40,7 +46,6 @@ public class ArtemisService {
 
   @JmsListener(destination = ArtemisService.VerificationResultQueueName)
   public void processMessage(String content) {
-    var logger = LoggerFactory.getLogger(NotesRestController.class);
     logger.error("received raw >" + content + "<");
 
     var json = new JSONObject(content);
