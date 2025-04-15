@@ -67,18 +67,14 @@ public class ArtemisServiceTests {
 
   @Test
   public void receiveMessage_WithProperContent_ShouldWork(CapturedOutput output) throws Exception {
-    jmsTemplate.convertAndSend("verification-result.queue", "{\"id\":0,\"result\":\"accepted\"}");
-
-    await().untilAsserted(() -> assertThat(output).contains("received raw >"));
-    await().untilAsserted(() -> assertThat(output).contains("received decoded >"));
+    jmsTemplate.convertAndSend("verification-result.queue", new NoteVerificationResult(0, "accepted").toJSONString());
+    await().untilAsserted(() -> assertThat(output).contains("Accepting note #0"));
   }
 
   @Test
-  public void receiveMessage_Empty_ShouldWork(CapturedOutput output) throws Exception {
+  public void receiveMessage_Empty_ShouldDiscard(CapturedOutput output) throws Exception {
     jmsTemplate.convertAndSend("verification-result.queue", "{}");
-
-    await().untilAsserted(() -> assertThat(output).contains("received raw >"));
-    await().untilAsserted(() -> assertThat(output).contains("received decoded >"));
+    await().untilAsserted(() -> assertThat(output).contains("Received unexpected Note-Verification-Result message: >>{}<<"));
   }
 
   @Test
