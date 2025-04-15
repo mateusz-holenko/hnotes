@@ -29,9 +29,12 @@ public class Note {
   @UpdateTimestamp(source = SourceType.DB)
   private Instant lastModificationTimestamp;
 
-  public Note() { }
+  public Note() {
+    this.status = NoteStatus.UNVERIFIED;
+  }
 
   public Note(String title, String content) {
+    this();
     this.title = title;
     this.content = content;
   }
