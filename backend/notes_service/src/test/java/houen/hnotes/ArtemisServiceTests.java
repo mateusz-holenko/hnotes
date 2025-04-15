@@ -78,8 +78,7 @@ public class ArtemisServiceTests {
   }
 
   @Test
-  public void receiveMessage_WithProperContent_ShouldAcceptNote() throws Exception {
-
+  public void receiveMessage_WithProperContent_ShouldAcceptNote(CapturedOutput output) throws Exception {
     mockServer = MockRestServiceServer.createServer(restTemplate);
     mockServer
       .expect(requestTo("http://verification/verificator"))
@@ -103,5 +102,18 @@ public class ArtemisServiceTests {
     var retrievedNote = currentNotes.get(0);
     Assertions.assertEquals(16, retrievedNote.getId());
     Assertions.assertEquals(NoteStatus.UNVERIFIED, retrievedNote.getStatus());
+
+    jmsTemplate.convertAndSend("verification-result.queue", new NoteVerificationResult(16, "accepted").toJSONString());
+    await().untilAsserted(() -> assertThat(output).contains("Accepting note #16"));
+    // TODO: there might still be a race condition, as the "Accepting note" msg is written BEFORE actually touching the notes store; fixit
+
+    currentNotes.clear();
+    notesStore.getNotes(null, 100, 0, "").forEach(currentNotes::add);
+
+    Assertions.assertEquals(1, currentNotes.size());
+
+    retrievedNote = currentNotes.get(0);
+    Assertions.assertEquals(16, retrievedNote.getId());
+    Assertions.assertEquals(NoteStatus.ACCEPTED, retrievedNote.getStatus());
   }
 }
