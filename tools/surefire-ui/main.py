@@ -12,11 +12,16 @@ class TestsTable(DataTable):
         Binding('j', 'cursor_down', 'Move cursor down'),
         Binding('k', 'cursor_up', 'Move cursor up'),
         Binding('h', 'cursor_left', 'Move cursor left'),
-        Binding('l', 'cursor_right', 'Move cursor right')
+        Binding('l', 'cursor_right', 'Move cursor right'),
+        Binding('r', 'run_selected_test()', 'Run selected test')
     ]
 
     def __init__(self):
         super().__init__()
+
+    def on_data_table_row_selected(self, ev):
+        t = self.app.query_one(TabbedContent)
+        t.focus()
 
     def on_data_table_row_highlighted(self, x):
         t = self.app.query_one(TabbedContent)
@@ -29,6 +34,9 @@ class TestsTable(DataTable):
             t.add_pane(p)
         if fp:
             t.active = fp.id
+
+    def action_run_selected_test(self):
+        raise Exception('xxx')
 
 
 class SurefireUI(App):
