@@ -21,10 +21,12 @@ public class ArtemisService {
   private static final String VerificationResultQueueName = "verification-result.queue";
 
   private final JmsTemplate t;
+  private final NotesStore n;
 
   @Autowired
-  public ArtemisService(JmsTemplate jmsTemplate) {
+  public ArtemisService(JmsTemplate jmsTemplate, NotesStore notesStore) {
     this.t = jmsTemplate;
+    this.n = notesStore;
   }
 
   public void send(NoteVerificationRequest request) {
