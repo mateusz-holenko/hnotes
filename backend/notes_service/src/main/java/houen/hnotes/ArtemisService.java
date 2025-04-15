@@ -44,11 +44,25 @@ public class ArtemisService {
 
   @JmsListener(destination = ArtemisService.VerificationResultQueueName)
   public void processMessage(String content) {
-    logger.error("received raw >" + content + "<");
+    var result = NoteVerificationResult.fromJSON(content);
+    if(result == null) {
+      logger.error("Received unexpected Note-Verification-Result message: >>{}<<", content);
+      return;
+    }
 
-    var json = new JSONObject(content);
-
-    logger.error("received decoded >" + json + "<");
+    switch(result.getResult()) {
+      case "accepted":
+        logger.info("Accepting note #{}", result.getId());
+        n.acceptNote(result.getId());
+        break;
+      // case "rejected":
+      //   logger.info("Rejecting note #{}", result.getId());
+      //   n.rejectNote(result.getId());
+      default:
+        // TODO: this should be handled inside NoteVerificaitonResult itself while parsing JSON
+        logger.error("Unexpected result: {}", result.getResult());
+        break;
+    }
   }
 }
 

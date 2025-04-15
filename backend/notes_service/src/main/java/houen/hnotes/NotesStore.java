@@ -44,6 +44,18 @@ public class NotesStore {
       }
     }
 
+    public boolean acceptNote(Integer noteId) {
+      var noteOption = notesRepository.findById(noteId);
+      if(noteOption.isEmpty()) {
+        return false;
+      }
+
+      var note = noteOption.get();
+      note.setStatus(NoteStatus.ACCEPTED);
+      notesRepository.save(note);
+      return true;
+    }
+
     public NewNoteResult addNote(Note n) throws Exception {
       var verificationResult = verificationService.Check(n.getContent());
 
