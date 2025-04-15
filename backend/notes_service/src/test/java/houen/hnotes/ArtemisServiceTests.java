@@ -7,10 +7,13 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.system.CapturedOutput;
+import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
@@ -19,14 +22,18 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.junit4.SpringRunner;
+import static org.assertj.core.api.Assertions.*;
+import static org.awaitility.Awaitility.*;
+
+// import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+// import org.junit.runner.RunWith;
+// import org.springframework.test.context.junit4.SpringRunner;
 
 
-// @SpringBootTest()
-@RunWith(SpringRunner.class)
-@DataJpaTest
+@SpringBootTest()
+@ExtendWith(OutputCaptureExtension.class)
+// @RunWith(SpringRunner.class)
+// @DataJpaTest
 public class ArtemisServiceTests {
 
   @Autowired
@@ -58,23 +65,21 @@ public class ArtemisServiceTests {
     Assertions.assertEquals("content", asJson.getString("content"));
   }
 
-  // @Test
-  // public void receiveMessage_WithProperContent_ShouldWork() throws Exception {
-  //   Assertions.assertEquals(0, artemisService.NumberOfProcessedMessages);
+  @Test
+  public void receiveMessage_WithProperContent_ShouldWork(CapturedOutput output) throws Exception {
+    jmsTemplate.convertAndSend("verification-result.queue", "{\"id\":0,\"result\":\"accepted\"}");
 
-  //   jmsTemplate.convertAndSend("verification-result.queue", "{\"id\":0,\"result\":\"accepted\"}");
+    await().untilAsserted(() -> assertThat(output).contains("received raw >"));
+    await().untilAsserted(() -> assertThat(output).contains("received decoded >"));
+  }
 
-  //   Assertions.assertEquals(1, artemisService.NumberOfProcessedMessages);
-  // }
+  @Test
+  public void receiveMessage_Empty_ShouldWork(CapturedOutput output) throws Exception {
+    jmsTemplate.convertAndSend("verification-result.queue", "{}");
 
-  // @Test
-  // public void receiveMessage_Empty_ShouldWork() throws Exception {
-  //   Assertions.assertEquals(0, artemisService.NumberOfProcessedMessages);
-
-  //   jmsTemplate.convertAndSend("verification-result.queue", "{}");
-
-  //   Assertions.assertEquals(1, artemisService.NumberOfProcessedMessages);
-  // }
+    await().untilAsserted(() -> assertThat(output).contains("received raw >"));
+    await().untilAsserted(() -> assertThat(output).contains("received decoded >"));
+  }
 
   @Test
   public void receiveMessage_WithProperContent_ShouldAcceptNote() throws Exception {
