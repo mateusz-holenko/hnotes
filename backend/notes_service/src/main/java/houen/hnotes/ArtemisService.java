@@ -4,6 +4,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
@@ -19,14 +20,16 @@ public class ArtemisService {
   private static final String VerificationQueueName = "verification.queue";
   private static final String VerificationResultQueueName = "verification-result.queue";
 
-  private final NotesStore n;
   private final JmsTemplate brokerTemplate;
+
+  @Autowired
+  @Lazy
+  private NotesStore notesStore;
 
   private final Logger logger;
 
   @Autowired
-  public ArtemisService(JmsTemplate jmsTemplate, NotesStore notesStore) {
-    this.n = notesStore;
+  public ArtemisService(JmsTemplate jmsTemplate) {
     this.brokerTemplate = jmsTemplate;
 
     logger = LoggerFactory.getLogger(ArtemisService.class);
@@ -53,7 +56,7 @@ public class ArtemisService {
     switch(result.getResult()) {
       case "accepted":
         logger.info("Accepting note #{}", result.getId());
-        n.acceptNote(result.getId());
+        notesStore.acceptNote(result.getId());
         break;
       // case "rejected":
       //   logger.info("Rejecting note #{}", result.getId());
