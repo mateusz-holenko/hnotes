@@ -32,7 +32,7 @@ public class ArtemisService {
   public ArtemisService(JmsTemplate jmsTemplate) {
     this.brokerTemplate = jmsTemplate;
 
-    logger = LoggerFactory.getLogger(ArtemisService.class);
+    logger = LoggerFactory.getLogger(NotesRestController.class);
   }
 
   public void send(NoteVerificationRequest request) {
