@@ -45,13 +45,21 @@ public class NotesStore {
     }
 
     public boolean acceptNote(Integer noteId) {
+      return setNoteStatus(noteId, NoteStatus.ACCEPTED);
+    }
+
+    public boolean rejectNote(Integer noteId) {
+      return setNoteStatus(noteId, NoteStatus.REJECTED);
+    }
+
+    private boolean setNoteStatus(Integer noteId, NoteStatus status) {
       var noteOption = notesRepository.findById(noteId);
       if(noteOption.isEmpty()) {
         return false;
       }
 
       var note = noteOption.get();
-      note.setStatus(NoteStatus.ACCEPTED);
+      note.setStatus(status);
       notesRepository.save(note);
       return true;
     }
