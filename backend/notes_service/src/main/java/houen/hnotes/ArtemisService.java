@@ -19,22 +19,22 @@ public class ArtemisService {
   private static final String VerificationQueueName = "verification.queue";
   private static final String VerificationResultQueueName = "verification-result.queue";
 
-  private final JmsTemplate t;
   private final NotesStore n;
+  private final JmsTemplate brokerTemplate;
 
   private final Logger logger;
 
   @Autowired
   public ArtemisService(JmsTemplate jmsTemplate, NotesStore notesStore) {
-    this.t = jmsTemplate;
     this.n = notesStore;
+    this.brokerTemplate = jmsTemplate;
 
     logger = LoggerFactory.getLogger(ArtemisService.class);
   }
 
   public void send(NoteVerificationRequest request) {
     logger.info("Sending verification request for note #{}", request.getId());
-    t.send(ArtemisService.VerificationQueueName, new MessageCreator() {
+    brokerTemplate.send(ArtemisService.VerificationQueueName, new MessageCreator() {
       public Message createMessage(Session session) throws JMSException {
         var requestAsJSON = new JSONObject(request);
         return session.createTextMessage(requestAsJSON.toString());
