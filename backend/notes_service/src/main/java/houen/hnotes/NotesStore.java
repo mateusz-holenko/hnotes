@@ -15,16 +15,17 @@ import org.springframework.data.domain.Sort;
 @Component
 public class NotesStore {
 
-    private final VerificationService verificationService;
     private final ElasticSearchService elasticSearchService;
     private final NotesRepository notesRepository;
+    private final ArtemisService artemisService;
 
     private final Logger logger;
 
-    public NotesStore(@Autowired NotesRepository notesRepository, @Autowired ElasticSearchService searchService, @Autowired VerificationService verificationService) {
-      this.verificationService = verificationService;
+    @Autowired
+    public NotesStore(NotesRepository notesRepository, ElasticSearchService searchService, ArtemisService artemisService) {
       this.elasticSearchService = searchService;
       this.notesRepository = notesRepository;
+      this.artemisService = artemisService;
 
       logger = LoggerFactory.getLogger(NotesRestController.class);
     }
@@ -65,16 +66,9 @@ public class NotesStore {
     }
 
     public NewNoteResult addNote(Note n) throws Exception {
-      var verificationResult = verificationService.Check(n.getContent());
-
-      logger.debug("Note verification result is: " + verificationResult.toString());
-
-      if(!verificationResult.status().equals("accepted")) {
-        return null;
-      }
-
       notesRepository.save(n);
       elasticSearchService.indexNote(n);
+      artemisService.send(new NoteVerificationRequest(n.getId(), n.getTitle(), n.getContent()));
       return new NewNoteResult(n.getId(), n.getCreationTimestamp());
     }
 
