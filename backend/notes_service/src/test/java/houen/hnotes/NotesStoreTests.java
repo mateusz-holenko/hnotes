@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
@@ -27,32 +28,15 @@ public class NotesStoreTests {
   @Autowired
   private NotesStore notesStore;
 
-  @Autowired
-  private RestTemplate restTemplate;
+  @MockitoBean
+  private ArtemisService artemisService;
 
-  private MockRestServiceServer mockServer;
+  @MockitoBean
+  private ElasticSearchService searchService;
 
-  @BeforeEach
-  public void init() {
-    mockServer = MockRestServiceServer.createServer(restTemplate);
-  }
 
   @Test
   public void testGettingNotes() throws Exception {
-    Assertions.assertNotNull(notesStore);
-
-    for(int i = 1; i <= 15; i++) {
-      mockServer
-        .expect(requestTo("http://verification/verificator"))
-        .andExpect(method(HttpMethod.POST))
-        .andRespond(withSuccess("{\"status\":\"accepted\",\"length\":120}", MediaType.APPLICATION_JSON));
-
-      mockServer
-        .expect(requestTo("http://elastic/note/_doc/" + i))
-        .andExpect(method(HttpMethod.POST))
-        .andRespond(withSuccess());
-    }
-
     notesStore.createDummyNotes();
     var notes = new ArrayList<Note>();
     notesStore.getNotes(null, 3, 1, "").forEach(notes::add);
