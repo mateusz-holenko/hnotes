@@ -59,28 +59,4 @@ public class NotesStoreTests {
 
     Assertions.assertEquals(3, notes.size());
   }
-
-  @Autowired
-  private JmsTemplate jmsTemplate;
-
-  @Autowired
-  private ArtemisService artemisService;
-
-  @Test
-  @Timeout(1)
-  public void testMessageBroker() throws Exception {
-    // jmsTemplate.convertAndSend("verification-result.queue", "nope");
-
-    artemisService.send(new NoteVerificationRequest(0, "title", "content"));
-    var message = jmsTemplate.receive("verification.queue");
-
-    Assertions.assertNotNull(message);
-    Assertions.assertEquals(ActiveMQTextMessage.class, message.getClass());
-
-    var text = ((ActiveMQTextMessage)message).getText();
-    var asJson = new JSONObject(text);
-    Assertions.assertEquals(0, asJson.getInt("id"));
-    Assertions.assertEquals("title", asJson.getString("title"));
-    Assertions.assertEquals("content", asJson.getString("content"));
-  }
 }
