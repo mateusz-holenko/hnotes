@@ -25,15 +25,9 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.assertj.core.api.Assertions.*;
 import static org.awaitility.Awaitility.*;
 
-// import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-// import org.junit.runner.RunWith;
-// import org.springframework.test.context.junit4.SpringRunner;
-
 
 @SpringBootTest()
 @ExtendWith(OutputCaptureExtension.class)
-// @RunWith(SpringRunner.class)
-// @DataJpaTest
 public class ArtemisServiceTests {
 
   @Autowired
