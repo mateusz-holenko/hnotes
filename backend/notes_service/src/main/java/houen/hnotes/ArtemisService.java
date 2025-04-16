@@ -63,7 +63,7 @@ public class ArtemisService {
       //   n.rejectNote(result.getId());
       default:
         // TODO: this should be handled inside NoteVerificaitonResult itself while parsing JSON
-        logger.error("Unexpected result: {}", result.getResult());
+        logger.error("Unexpected Note-Verification-Result status: {}", result.getResult());
         break;
     }
   }
