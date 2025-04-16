@@ -58,9 +58,9 @@ public class ArtemisService {
         logger.info("Accepting note #{}", result.getId());
         notesStore.acceptNote(result.getId());
         break;
-      // case "rejected":
-      //   logger.info("Rejecting note #{}", result.getId());
-      //   n.rejectNote(result.getId());
+      case "rejected":
+        logger.info("Rejecting note #{}", result.getId());
+        notesStore.rejectNote(result.getId());
       default:
         // TODO: this should be handled inside NoteVerificaitonResult itself while parsing JSON
         logger.error("Unexpected Note-Verification-Result status: {}", result.getResult());
