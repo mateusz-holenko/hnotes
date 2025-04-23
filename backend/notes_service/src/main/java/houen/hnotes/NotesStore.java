@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
@@ -77,14 +77,16 @@ public class NotesStore {
         logger.debug("Principal name: " + name);
       }
 
+      var pageRequest = PageRequest.of(page, limit, Sort.by("lastModificationTimestamp").descending());
+      Page<Note> result;
+
       if(query.length() > 0) {
         var ids = elasticSearchService.searchNotes(query);
-        // TODO: retrieve notes in batch from a DB and return
-        throw new UnsupportedOperationException(String.format("Querying notes is not currently supported, but would return %d notes", ids.length));
+        result = notesRepository.findByIdIn(ids, pageRequest);
+      } else {
+        result = notesRepository.findAll(pageRequest);
       }
 
-      var result = notesRepository
-        .findAll(PageRequest.of(page, limit, Sort.by("lastModificationTimestamp").descending()));
       return result.getContent();
     }
 
