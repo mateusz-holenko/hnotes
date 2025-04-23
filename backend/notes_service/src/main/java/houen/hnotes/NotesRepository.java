@@ -1,6 +1,11 @@
 package houen.hnotes;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-public interface NotesRepository extends CrudRepository<Note, Integer>, PagingAndSortingRepository<Note, Integer> { }
+public interface NotesRepository extends CrudRepository<Note, Integer>, PagingAndSortingRepository<Note, Integer>
+{
+  Page<Note> findByIdIn(Integer[] ids, Pageable page);
+}
