@@ -1,7 +1,5 @@
 package houen.hnotes;
 
-import java.util.ArrayList;
-
 import java.security.Principal;
 
 import org.springframework.stereotype.Component;
