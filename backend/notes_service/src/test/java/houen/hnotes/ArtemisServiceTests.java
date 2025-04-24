@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.apache.activemq.artemis.jms.client.ActiveMQTextMessage;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
@@ -13,8 +12,6 @@ import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,13 +19,6 @@ import org.springframework.boot.test.system.CapturedOutput;
 import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.web.client.MockRestServiceServer;
-import org.springframework.web.client.RestTemplate;
-
-import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
-
 import static org.assertj.core.api.Assertions.*;
 import static org.awaitility.Awaitility.*;
 
@@ -38,7 +28,6 @@ import static org.awaitility.Awaitility.*;
 @AutoConfigureTestDatabase
 public class ArtemisServiceTests {
 
-  private static MockRestServiceServer mockServer;
   private static Logger logger = LoggerFactory.getLogger(ArtemisServiceTests.class);
 
   @MockitoBean
@@ -53,10 +42,6 @@ public class ArtemisServiceTests {
   @Autowired
   private ArtemisService artemisService;
 
-  @BeforeAll
-  private static void initAll(@Autowired RestTemplate restTemplate) {
-    mockServer = MockRestServiceServer.createServer(restTemplate);
-  }
 
   @BeforeEach
   private void initEach(TestInfo testInfo) {
