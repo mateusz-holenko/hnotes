@@ -93,4 +93,28 @@ describe('NotesService', () => {
     expect(service.notes[0].content).toEqual("Content");
     httpTesting.verify();
   });
+
+  it('should update note', () => {
+    let note = new NoteResult(undefined, "Title", "Content");
+    service.addNote(note)
+      .subscribe({ next: () => {}, error: () => {} });
+    httpTesting
+      .expectOne({method: 'POST', url: '/api/notes'})
+      // only ID of the returned note should be used
+      .flush(new NoteResult(0, "Ignored title", "Ignored content"));
+
+    note = service.notes[0];
+    note.title = "Modified title";
+    service.updateNote(note)
+      .subscribe({ next: () => {}, error: () => {} });
+    httpTesting
+      .expectOne({method: 'PUT', url: '/api/notes/0'})
+      .flush(null);
+
+    expect(service.notes).toHaveSize(1);
+    expect(service.notes[0].id).toEqual(0);
+    expect(service.notes[0].title).toEqual("Modified title");
+    expect(service.notes[0].content).toEqual("Content");
+    httpTesting.verify();
+  });
 });
