@@ -18,10 +18,14 @@ export class NotesService {
     return environment.notesServiceUrl + path;
   }
 
+  private getFetchUrl(page: number) {
+      return this.getFullUrl(`/notes?limit=${pageSize}&page=${page}`);
+  }
+
   prefetchNotes() : Observable<NoteResult[]> {
     // TODO: handle errors
     var observableNotesResult = this.http
-      .get<NoteResult[]>(this.getFullUrl(`/notes?limit=${pageSize}`))
+      .get<NoteResult[]>(this.getFetchUrl(0))
       .pipe(
         tap(notes => this.handleNotes('new', notes))
       );
@@ -42,7 +46,7 @@ export class NotesService {
     // TODO: race condition!
     var nextPage = this.fetchedPages + 1;
     var observableNotesResult = this.http
-      .get<NoteResult[]>(this.getFullUrl(`/notes?limit=${pageSize}&page=${nextPage}`))
+      .get<NoteResult[]>(this.getFetchUrl(nextPage))
       .pipe<NoteResult[]>(
         tap(n => { this.handleNotes('append', n) })
       );
