@@ -22,6 +22,11 @@ public class ArtemisService {
 
   private final JmsTemplate brokerTemplate;
 
+  // TODO: change into sth that could be exposed as metrics (or even better: automate it somehow?)
+  private int messagesSentCounter = 0;
+  private int messagesProcessedCounter = 0;
+  private int errorReceivedCounter = 0;
+
   @Autowired
   @Lazy
   private NotesStore notesStore;
@@ -35,6 +40,10 @@ public class ArtemisService {
     logger = LoggerFactory.getLogger(NotesRestController.class);
   }
 
+  public int getMessagesProcessedCounter() {
+    return messagesProcessedCounter;
+  }
+
   public void send(NoteVerificationRequest request) {
     logger.info("Sending verification request for note #{}", request.getId());
     brokerTemplate.send(ArtemisService.VerificationQueueName, new MessageCreator() {
@@ -43,6 +52,7 @@ public class ArtemisService {
         return session.createTextMessage(requestAsJSON.toString());
       }
     });
+    messagesSentCounter++;
   }
 
   @JmsListener(destination = ArtemisService.VerificationResultQueueName)
@@ -50,6 +60,7 @@ public class ArtemisService {
     var result = NoteVerificationResult.fromJSON(content);
     if(result == null) {
       logger.error("Received unexpected Note-Verification-Result message: >>{}<<", content);
+      errorReceivedCounter++;
       return;
     }
 
@@ -64,8 +75,11 @@ public class ArtemisService {
       default:
         // TODO: this should be handled inside NoteVerificaitonResult itself while parsing JSON
         logger.error("Unexpected Note-Verification-Result status: {}", result.getResult());
-        break;
+        errorReceivedCounter++;
+        return;
     }
+
+    messagesProcessedCounter++;
   }
 }
 
