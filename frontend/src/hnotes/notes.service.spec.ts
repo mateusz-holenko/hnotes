@@ -117,4 +117,33 @@ describe('NotesService', () => {
     expect(service.notes[0].content).toEqual("Content");
     httpTesting.verify();
   });
+
+  it('should filter notes', () => {
+    service.setFilter('ananas');
+
+    service.prefetchNotes()
+      .subscribe({ next: () => {}, error: () => {} });
+
+    httpTesting
+      .expectOne({method: 'GET', url: '/api/notes?limit=15&page=0&query=ananas'})
+      // only ID of the returned note should be used
+      .flush(null);
+
+    httpTesting.verify();
+  });
+
+  it('should clear filter', () => {
+    service.setFilter('ananas');
+    service.setFilter('');
+
+    service.prefetchNotes()
+      .subscribe({ next: () => {}, error: () => {} });
+
+    httpTesting
+      .expectOne({method: 'GET', url: '/api/notes?limit=15&page=0'})
+      // only ID of the returned note should be used
+      .flush(null);
+
+    httpTesting.verify();
+  });
 });

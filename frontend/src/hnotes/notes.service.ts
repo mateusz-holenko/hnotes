@@ -10,6 +10,7 @@ const pageSize = 15;
 @Injectable({providedIn: 'root'})
 export class NotesService {
   private fetchedPages = 0;
+  private pattern = "";
   // TODO: add timetouts
 
   notes:NoteResult[] = [];
@@ -19,7 +20,11 @@ export class NotesService {
   }
 
   private getFetchUrl(page: number) {
+    if(this.pattern != "") {
+      return this.getFullUrl(`/notes?limit=${pageSize}&page=${page}&query=${this.pattern}`);
+    } else {
       return this.getFullUrl(`/notes?limit=${pageSize}&page=${page}`);
+    }
   }
 
   prefetchNotes() : Observable<NoteResult[]> {
@@ -89,6 +94,11 @@ export class NotesService {
           this.notes.splice(0, 0, n);
         })
       );
+  }
+
+  setFilter(pattern: string) {
+    this.pattern = pattern;
+    this.prefetchNotes();
   }
 
   constructor(private http : HttpClient) {}
