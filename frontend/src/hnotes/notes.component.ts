@@ -39,7 +39,7 @@ export class NotesComponent implements AfterViewInit, OnDestroy {
 
     var operation = (note.id == null)
       ? this.notesService.addNote(note)
-      : this.notesService.updateNote(note.id, note);
+      : this.notesService.updateNote(note);
 
     operation
         .subscribe({

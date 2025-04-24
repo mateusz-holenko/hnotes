@@ -79,13 +79,13 @@ export class NotesService {
       );
   }
 
-  updateNote(id: number, n: NoteResult) {
+  updateNote(n: NoteResult) {
     return this.http
-      .put<any>(this.getFullUrl(`/notes/${id}`), n)
+      .put<any>(this.getFullUrl(`/notes/${n.id}`), n)
       .pipe(
         tap(() => {
           // move the edited note to front
-          this.handleNoteRemoved(id);
+          this.handleNoteRemoved(n.id!);
           this.notes.splice(0, 0, n);
         })
       );
