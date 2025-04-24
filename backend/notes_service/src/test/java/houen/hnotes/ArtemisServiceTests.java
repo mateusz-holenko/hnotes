@@ -100,9 +100,8 @@ public class ArtemisServiceTests {
     Assertions.assertEquals(NoteStatus.UNVERIFIED, retrievedNote.getStatus());
 
     jmsTemplate.convertAndSend("verification-result.queue", new NoteVerificationResult(retrievedNoteId, "accepted").toJSONString());
-    await().untilAsserted(() -> assertThat(output).contains(String.format("Accepting note #%d", retrievedNoteId)));
-    // TODO: there might still be a race condition, as the "Accepting note" msg is written BEFORE actually touching the notes store; fixit
-
+    await().untilAsserted(() -> assertThat(artemisService.getMessagesProcessedCounter()).isEqualTo(1));
+    
     currentNotes.clear();
     notesStore.getNotes(null, 100, 0, "").forEach(currentNotes::add);
 
@@ -130,8 +129,7 @@ public class ArtemisServiceTests {
     Assertions.assertEquals(NoteStatus.UNVERIFIED, retrievedNote.getStatus());
 
     jmsTemplate.convertAndSend("verification-result.queue", new NoteVerificationResult(retrievedNoteId, "rejected").toJSONString());
-    await().untilAsserted(() -> assertThat(output).contains(String.format("Rejecting note #%d", retrievedNoteId)));
-    // TODO: there might still be a race condition, as the "Rejecting note" msg is written BEFORE actually touching the notes store; fixit
+    await().untilAsserted(() -> assertThat(artemisService.getMessagesProcessedCounter()).isEqualTo(1));
 
     currentNotes.clear();
     notesStore.getNotes(null, 100, 0, "").forEach(currentNotes::add);
