@@ -2,8 +2,12 @@ import { TestBed } from '@angular/core/testing';
 import { NotesService } from './notes.service';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { NoteResult } from './note-result';
 
 describe('NotesService', () => {
+  var httpTesting: HttpTestingController;
+  var service: NotesService;
+
   beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
@@ -12,6 +16,12 @@ describe('NotesService', () => {
         provideHttpClientTesting()
       ]
     });
+
+    httpTesting = TestBed.inject(HttpTestingController);
+    service = TestBed.inject(NotesService);
+  });
+
+  afterEach(async () => {
   });
 
   it('should create service', () => {
@@ -20,21 +30,67 @@ describe('NotesService', () => {
   });
 
   it('should prefetch notes', () => {
-    const service = TestBed.inject(NotesService);
-    const httpTesting = TestBed.inject(HttpTestingController);
-
     service.prefetchNotes()
-      .subscribe(
-        () => {},
-        () => {});
+      .subscribe({ next: () => {}, error: () => {} });
 
-    const req = httpTesting.expectOne('/api/notes?limit=15&page=0');
-    expect(req.request.method).toBe('GET');
-    req.flush([{},{}]);
-    // TODO: return actual notes
+    httpTesting
+      .expectOne({ method: 'GET', url: '/api/notes?limit=15&page=0' })
+      .flush(Array.from({length: 2}, () => new NoteResult()));
     
-    httpTesting.verify();
-
     expect(service.notes).toHaveSize(2);
+    httpTesting.verify();
+  });
+
+  it('should fetch more', () => {
+    service.prefetchNotes()
+      .subscribe({ next: () => {}, error: () => {} });
+    service.loadMoreNotes()
+      .subscribe({ next: () => {}, error: () => {} });
+
+    httpTesting
+      .expectOne({method: 'GET', url: '/api/notes?limit=15&page=0'})
+      .flush(Array.from({length: 15}, () => new NoteResult()));
+
+    httpTesting
+      .expectOne({method: 'GET', url: '/api/notes?limit=15&page=1'})
+      .flush(Array.from({length: 15}, () => new NoteResult()));
+
+    expect(service.notes).toHaveSize(30);
+    httpTesting.verify();
+  });
+
+  it('should remove note', () => {
+    service.prefetchNotes()
+      .subscribe({ next: () => {}, error: () => {} });
+    service.removeNote(0)
+      .subscribe({ next: () => {}, error: () => {} });
+
+    httpTesting
+      .expectOne({method: 'GET', url: '/api/notes?limit=15&page=0'})
+      .flush(Array.from({length: 15}, (_, i) => new NoteResult(i)));
+
+    httpTesting
+      .expectOne({method: 'DELETE', url: '/api/notes/0'})
+      .flush(null);
+
+    expect(service.notes).toHaveSize(14);
+    httpTesting.verify();
+  });
+
+  it('should add note', () => {
+    let note = new NoteResult(undefined, "Title", "Content");
+    service.addNote(note)
+      .subscribe({ next: () => {}, error: () => {} });
+
+    httpTesting
+      .expectOne({method: 'POST', url: '/api/notes'})
+      // only ID of the returned note should be used
+      .flush(new NoteResult(0, "Ignored title", "Ignored content"));
+
+    expect(service.notes).toHaveSize(1);
+    expect(service.notes[0].id).toEqual(0);
+    expect(service.notes[0].title).toEqual("Title");
+    expect(service.notes[0].content).toEqual("Content");
+    httpTesting.verify();
   });
 });
