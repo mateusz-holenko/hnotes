@@ -25,12 +25,13 @@ export class NotesComponent implements AfterViewInit, OnDestroy {
 
     this.notesService
       .removeNote(id)
-      .subscribe(
-        () => { wrapper.mode = LazyWrapperModeEnum.Loaded; },
-        () => {
+      .subscribe({
+        next: () => { wrapper.mode = LazyWrapperModeEnum.Loaded; },
+        error: () => {
           wrapper.mode = LazyWrapperModeEnum.Error;
           this.appService.showError('Error while removing a note. Please try again.');
-        });
+        }
+      });
   }
 
   handleAcceptNote(wrapper: LazyWrapperComponent, note: NoteResult) {
@@ -41,15 +42,15 @@ export class NotesComponent implements AfterViewInit, OnDestroy {
       : this.notesService.updateNote(note.id, note);
 
     operation
-        .subscribe(
-          () => {
+        .subscribe({
+          next: () => {
             wrapper.mode = LazyWrapperModeEnum.Loaded;
           },
-          () => {
+          error: () => {
             wrapper.mode = LazyWrapperModeEnum.Error;
             this.appService.showError('Error while adding/updating a note. Please try again.');
           }
-        );
+        });
   }
 
   refreshNotes() {
@@ -59,12 +60,13 @@ export class NotesComponent implements AfterViewInit, OnDestroy {
 
     this.notesService
       .prefetchNotes()
-      .subscribe(
-        () => { this.gridWrapper.mode = LazyWrapperModeEnum.Loaded; },
-        () => {
+      .subscribe({
+        next: () => { this.gridWrapper.mode = LazyWrapperModeEnum.Loaded; },
+        error: () => {
           this.gridWrapper.mode = LazyWrapperModeEnum.Error;
           this.appService.showError('Error while loading notes. Please try again');
-        });
+        }
+      });
   }
 
   loadMoreNotes(wrapper: LazyWrapperComponent) {
@@ -73,12 +75,13 @@ export class NotesComponent implements AfterViewInit, OnDestroy {
     wrapper.mode = LazyWrapperModeEnum.Loading;
     this.notesService
       .loadMoreNotes()
-      .subscribe(
-        () => { wrapper.mode = LazyWrapperModeEnum.Loaded; },
-        () => {
+      .subscribe({
+        next: () => { wrapper.mode = LazyWrapperModeEnum.Loaded; },
+        error: () => {
           wrapper.mode = LazyWrapperModeEnum.Error;
           this.appService.showError('Error while loading notes. Please try again')
-        });
+        }
+      });
   }
 
   ngAfterViewInit() {
