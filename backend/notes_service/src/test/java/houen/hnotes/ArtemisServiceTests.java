@@ -43,17 +43,9 @@ public class ArtemisServiceTests {
   @Autowired
   private ArtemisService artemisService;
 
-  private void clearVerificationResultQueue() {
-    var currentTimeout = jmsTemplate.getReceiveTimeout();
-    jmsTemplate.setReceiveTimeout(JmsDestinationAccessor.RECEIVE_TIMEOUT_NO_WAIT);
-    while(jmsTemplate.receive("verification-result.queue") != null) { }
-    jmsTemplate.setReceiveTimeout(currentTimeout);
-  }
-
   @BeforeEach
   private void initEach(TestInfo testInfo) {
     notesStore.clear();
-    clearVerificationResultQueue();
 
     logger.info("--- Starting test: {} ---", testInfo.getDisplayName());
   }
