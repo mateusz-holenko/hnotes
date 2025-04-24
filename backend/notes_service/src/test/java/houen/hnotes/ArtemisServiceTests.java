@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -38,6 +39,7 @@ import static org.awaitility.Awaitility.*;
 public class ArtemisServiceTests {
 
   private static MockRestServiceServer mockServer;
+  private static Logger logger = LoggerFactory.getLogger(ArtemisServiceTests.class);
 
   @MockitoBean
   private ElasticSearchService searchService;
@@ -59,7 +61,6 @@ public class ArtemisServiceTests {
   @BeforeEach
   private void initEach(TestInfo testInfo) {
     notesStore.clear();
-    var logger = LoggerFactory.getLogger(ArtemisServiceTests.class);
     logger.info("--- Starting test: {} ---", testInfo.getDisplayName());
   }
 
