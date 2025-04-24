@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 import { LoginStatusComponent } from './login-status.component';
 import { AppService } from './app-service';
 
