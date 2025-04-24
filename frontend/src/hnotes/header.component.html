@@ -5,7 +5,9 @@
     </div>
   </div>
   <div class="header-container">
-    <div class="centered-containee">Search...</div>
+    <div class="centered-containee">
+      <input #i type="text" (input)="onSearchChange(i)">
+    </div>
   </div>
   <div class="header-container">
     <div class="centered-containee">
