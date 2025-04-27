@@ -10,6 +10,8 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Service;
 
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import jakarta.jms.JMSException;
 import jakarta.jms.Message;
 import jakarta.jms.Session;
@@ -22,26 +24,33 @@ public class ArtemisService {
 
   private final JmsTemplate brokerTemplate;
 
-  // TODO: change into sth that could be exposed as metrics (or even better: automate it somehow?)
-  private int messagesSentCounter = 0;
-  private int messagesProcessedCounter = 0;
-  private int errorReceivedCounter = 0;
-
   @Autowired
   @Lazy
   private NotesStore notesStore;
 
   private final Logger logger;
 
+  private final Counter processedCounter;
+  private final Counter sentCounter;
+  private final Counter errorsCounter;
+
   @Autowired
-  public ArtemisService(JmsTemplate jmsTemplate) {
+  public ArtemisService(JmsTemplate jmsTemplate, MeterRegistry meterRegistry) {
     this.brokerTemplate = jmsTemplate;
 
     logger = LoggerFactory.getLogger(NotesRestController.class);
-  }
 
-  public int getMessagesProcessedCounter() {
-    return messagesProcessedCounter;
+    processedCounter = Counter.builder("artemis.messagesProcessed")
+      .baseUnit("number of messages")
+      .register(meterRegistry);
+
+    sentCounter = Counter.builder("artemis.messagesSent")
+      .baseUnit("number of messages")
+      .register(meterRegistry);
+
+    errorsCounter = Counter.builder("artemis.errors")
+      .baseUnit("number of messages")
+      .register(meterRegistry);
   }
 
   public void send(NoteVerificationRequest request) {
@@ -52,7 +61,7 @@ public class ArtemisService {
         return session.createTextMessage(requestAsJSON.toString());
       }
     });
-    messagesSentCounter++;
+    sentCounter.increment();
   }
 
   @JmsListener(destination = ArtemisService.VerificationResultQueueName)
@@ -60,7 +69,7 @@ public class ArtemisService {
     var result = NoteVerificationResult.fromJSON(content);
     if(result == null) {
       logger.error("Received unexpected Note-Verification-Result message: >>{}<<", content);
-      errorReceivedCounter++;
+      errorsCounter.increment();
       return;
     }
 
@@ -75,11 +84,11 @@ public class ArtemisService {
       default:
         // TODO: this should be handled inside NoteVerificaitonResult itself while parsing JSON
         logger.error("Unexpected Note-Verification-Result status: {}", result.getResult());
-        errorReceivedCounter++;
+        errorsCounter.increment();
         return;
     }
 
-    messagesProcessedCounter++;
+    processedCounter.increment();
   }
 }
 
