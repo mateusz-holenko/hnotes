@@ -21,6 +21,7 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.destination.JmsDestinationAccessor;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
+import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Metrics;
 
 import static org.assertj.core.api.Assertions.*;
@@ -45,6 +46,9 @@ public class ArtemisServiceTests {
 
   @Autowired
   private ArtemisService artemisService;
+
+  @Autowired
+  private MeterRegistry meterRegistry;
 
   @BeforeEach
   private void initEach(TestInfo testInfo) {
@@ -103,7 +107,7 @@ public class ArtemisServiceTests {
     Assertions.assertEquals(NoteStatus.UNVERIFIED, retrievedNote.getStatus());
 
     jmsTemplate.convertAndSend("verification-result.queue", new NoteVerificationResult(retrievedNoteId, "accepted").toJSONString());
-    await().untilAsserted(() -> assertThat(Metrics.counter("artemis.messagesProcessed").count()).isEqualTo(1));
+    await().untilAsserted(() -> assertThat(meterRegistry.counter("artemis.messagesProcessed").count()).isEqualTo(1));
     
     currentNotes.clear();
     notesStore.getNotes(null, 100, 0, "").forEach(currentNotes::add);
@@ -132,7 +136,7 @@ public class ArtemisServiceTests {
     Assertions.assertEquals(NoteStatus.UNVERIFIED, retrievedNote.getStatus());
 
     jmsTemplate.convertAndSend("verification-result.queue", new NoteVerificationResult(retrievedNoteId, "rejected").toJSONString());
-    await().untilAsserted(() -> assertThat(Metrics.counter("artemis.messagesProcessed").count()).isEqualTo(1));
+    await().untilAsserted(() -> assertThat(meterRegistry.counter("artemis.messagesProcessed").count()).isEqualTo(1));
 
     currentNotes.clear();
     notesStore.getNotes(null, 100, 0, "").forEach(currentNotes::add);
