@@ -4,6 +4,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
@@ -35,7 +36,7 @@ public class ArtemisService {
   private final Counter errorsCounter;
 
   @Autowired
-  public ArtemisService(JmsTemplate jmsTemplate, MeterRegistry meterRegistry) {
+  public ArtemisService(@Qualifier("verificationJmsTemplate") JmsTemplate jmsTemplate, MeterRegistry meterRegistry) {
     this.brokerTemplate = jmsTemplate;
 
     logger = LoggerFactory.getLogger(NotesRestController.class);
