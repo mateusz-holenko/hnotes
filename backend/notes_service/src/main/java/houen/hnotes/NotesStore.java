@@ -12,20 +12,19 @@ import org.springframework.data.domain.Sort;
 
 @Component
 public class NotesStore {
+  
+    private static final Logger logger = LoggerFactory.getLogger(NotesStore.class);
 
     private final ElasticSearchService elasticSearchService;
     private final NotesRepository notesRepository;
     private final ArtemisService artemisService;
 
-    private final Logger logger;
 
     @Autowired
     public NotesStore(NotesRepository notesRepository, ElasticSearchService searchService, ArtemisService artemisService) {
       this.elasticSearchService = searchService;
       this.notesRepository = notesRepository;
       this.artemisService = artemisService;
-
-      logger = LoggerFactory.getLogger(NotesRestController.class);
     }
 
     public void clear() {
