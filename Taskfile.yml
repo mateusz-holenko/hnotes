@@ -16,6 +16,9 @@ includes:
   artemis:
     taskfile: ./k8s/artemis_broker/Taskfile.yml
     dir: ./k8s/artemis_broker
+  status:
+    taskfile: ./backend/status_service/Taskfile.yml
+    dir: ./backend/status_service
 
 tasks:
   docker-run-all:
@@ -27,6 +30,7 @@ tasks:
       - verification:docker-build
       - notes:docker-build-db
       - notes:docker-build
+      - status:docker-build
       - artemis:docker-build
     cmds:
       - docker compose up --detach

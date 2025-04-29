@@ -36,6 +36,13 @@ services:
       ARTEMIS_PORT: 61616
       ELASTIC_SERVICE_HOST: "elasticsearch"
       ELASTIC_SERVICE_PORT: 9200
+  status:
+    image: hnotes.status
+    ports:
+      - 8100:8100
+    environment:
+      ARTEMIS_HOST: "artemis"
+      ARTEMIS_PORT: 61616
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.17.4
     ports:

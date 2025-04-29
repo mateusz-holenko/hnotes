@@ -1,0 +1,16 @@
+version: '3'
+
+tasks:
+  build:
+    cmds:
+      - nix-shell --run "mvn package"
+  run:
+    env:
+      ARTEMIS_HOST: localhost
+      ARTEMIS_PORT: 61616
+    cmds:
+      - nix-shell --run "./mvnw spring-boot:run"
+  docker-build:
+    deps: [build]
+    cmds:
+      - docker build -t hnotes.status -f ./Dockerfile .
