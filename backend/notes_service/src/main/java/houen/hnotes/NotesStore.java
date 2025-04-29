@@ -18,13 +18,14 @@ public class NotesStore {
     private final ElasticSearchService elasticSearchService;
     private final NotesRepository notesRepository;
     private final ArtemisService artemisService;
-
+    private final StatusService statusService;
 
     @Autowired
-    public NotesStore(NotesRepository notesRepository, ElasticSearchService searchService, ArtemisService artemisService) {
+    public NotesStore(NotesRepository notesRepository, ElasticSearchService searchService, ArtemisService artemisService, StatusService statusService) {
       this.elasticSearchService = searchService;
       this.notesRepository = notesRepository;
       this.artemisService = artemisService;
+      this.statusService = statusService;
     }
 
     public void clear() {
@@ -43,11 +44,21 @@ public class NotesStore {
     }
 
     public boolean acceptNote(Integer noteId) {
-      return setNoteStatus(noteId, NoteStatus.ACCEPTED);
+      if(!setNoteStatus(noteId, NoteStatus.ACCEPTED)) {
+        return false;
+      }
+
+      statusService.sendStatusUpdate(StatusUpdate.NoteAccepted(noteId));
+      return true;
     }
 
     public boolean rejectNote(Integer noteId) {
-      return setNoteStatus(noteId, NoteStatus.REJECTED);
+      if(!setNoteStatus(noteId, NoteStatus.REJECTED)) {
+        return false;
+      }
+
+      statusService.sendStatusUpdate(StatusUpdate.NoteRejected(noteId));
+      return true;
     }
 
     private boolean setNoteStatus(Integer noteId, NoteStatus status) {
@@ -64,6 +75,7 @@ public class NotesStore {
 
     public NewNoteResult addNote(Note n) throws Exception {
       notesRepository.save(n);
+      statusService.sendStatusUpdate(StatusUpdate.NoteCreated(n.getId()));
       elasticSearchService.indexNote(n);
       artemisService.send(new NoteVerificationRequest(n.getId(), n.getTitle(), n.getContent()));
       return new NewNoteResult(n.getId(), n.getCreationTimestamp());
@@ -93,6 +105,7 @@ public class NotesStore {
       ensureNoteExists(n.getId());
 
       notesRepository.save(n);
+      statusService.sendStatusUpdate(StatusUpdate.NoteEdited(n.getId()));
       elasticSearchService.indexNote(n);
 
       return new EditedNoteResult(n.getLastModificationTimestamp());
@@ -102,6 +115,7 @@ public class NotesStore {
       ensureNoteExists(id);
 
       notesRepository.deleteById(id);
+      statusService.sendStatusUpdate(StatusUpdate.NoteDeleted(id));
       // TODO: remove from elastic search index
     }
 
