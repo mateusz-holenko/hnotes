@@ -105,7 +105,7 @@ public class NotesStore {
       ensureNoteExists(n.getId());
 
       notesRepository.save(n);
-      statusService.sendStatusUpdate(StatusUpdate.NoteEdited(n.getId()));
+      statusService.sendStatusUpdate(StatusUpdate.NoteUpdated(n.getId()));
       elasticSearchService.indexNote(n);
 
       return new EditedNoteResult(n.getLastModificationTimestamp());
