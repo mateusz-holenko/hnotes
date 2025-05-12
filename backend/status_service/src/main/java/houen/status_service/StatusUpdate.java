@@ -1,9 +1,11 @@
 package houen.status_service;
 
 public class StatusUpdate {
-  private final String context;
-  private final Integer identifier;
-  private final String action;
+  private String context;
+  private Integer identifier;
+  private String action;
+
+  public StatusUpdate() {}
 
   public StatusUpdate(String context, Integer identifier, String action) {
     this.context = context;
