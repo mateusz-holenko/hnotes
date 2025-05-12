@@ -36,10 +36,11 @@ export class WebSocketService extends RxStomp {
     this.configure(config);
     this.activate();
 
-    this.watch('/topic/notes').subscribe((msg) => {
+    this.watch('/topic/status').subscribe((msg) => {
         var o = JSON.parse(msg.body);
-        console.log('GOT a MSG: ' + o.content);
-        this.snackBar.open('GOT a MSG: ' + o.content, 'Close');
+        var sm = o.context + ' #' + o.identifier + ': ' + o.action;
+        console.log('GOT a MSG: ' + sm);
+        this.snackBar.open('GOT a MSG: ' + sm, 'Close');
     })
 
     console.log('ENABLED!');
