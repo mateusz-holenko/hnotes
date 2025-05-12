@@ -1,3 +1,3 @@
 #!/bin/sh
 
-java -jar /app/hnotes-status.jar
+java -Xmx256m -jar /app/hnotes-status.jar
