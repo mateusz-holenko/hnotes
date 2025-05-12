@@ -255,6 +255,19 @@ under the License.
                <queue name="ExpiryQueue" />
             </anycast>
          </address>
+         <address name="verification.queue">
+            <anycast>
+               <queue name="verification.queue" />
+            </anycast>
+         </address>
+         <address name="verification-result.queue">
+            <anycast>
+               <queue name="verification-result.queue" />
+            </anycast>
+         </address>
+         <address name="status.topic">
+            <multicast></multicast>
+         </address>
 
       </addresses>
 
