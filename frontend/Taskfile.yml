@@ -6,12 +6,20 @@ tasks:
     desc: Build frontend in dev mode
     cmds:
       - nix-shell --run "ng build --configuration development"
+  build-prod:
+    desc: Build frontend in prod mode
+    cmds:
+      - nix-shell --run "ng build --configuration production"
   serve-dev:
     desc: Serve frontend in dev mode
     cmds:
       - nix-shell --run "ng serve --configuration development"
+  serve-prod:
+    desc: Serve frontend in prod mode
+    cmds:
+      - nix-shell --run "ng serve --configuration production"
   docker-build:
-    deps: [build-dev]
+    deps: [build-prod]
     cmds:
       - docker build -t hnotes.frontend .
   k8s-deploy:
