@@ -19,7 +19,7 @@ public class StatusQueue {
   @Autowired
   private StompController stompController;
 
-  @JmsListener(destination = StatusQueue.StatusUpdateTopic)
+  @JmsListener(destination = StatusQueue.StatusUpdateTopic, containerFactory = "jmsListenerFactory")
   public void processIncomingMessage(String content) {
     Logger.debug("Handling incoming message: >>{}<<", content);
     try {
