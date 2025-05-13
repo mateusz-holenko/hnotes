@@ -28,6 +28,18 @@ public class StatusUpdate implements Serializable {
   private final Integer identifier;
   private final String action;
 
+  public String getContext() {
+    return context;
+  }
+
+  public Integer getIdentifier() {
+    return identifier;
+  }
+
+  public String getAction() {
+    return action;
+  }
+
   private StatusUpdate(String context, Integer identifier, String action) {
     this.context = context;
     this.identifier = identifier;
