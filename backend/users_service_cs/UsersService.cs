@@ -29,11 +29,11 @@ public static class UsersService
     new User(800, "Guest")
   };
 
-    public static void Main(string[] args)
-    {
-        var builder = WebApplication.CreateBuilder(args);
-        builder.Services.AddControllers();
-        var app = builder.Build();
+  public static void Main(string[] args)
+  {
+    var builder = WebApplication.CreateBuilder(args);
+    builder.Services.AddControllers();
+    var app = builder.Build();
 
     app.MapPost("/users/login", (UserCredentials credentials) =>
     {
