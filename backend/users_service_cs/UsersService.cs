@@ -32,6 +32,7 @@ public static class UsersService
 
   private class UsersDbContext : DbContext
   {
+	public UsersDbContext(DbContextOptions<UsersDbContext> options) : base(options) {}
   }
 
   public static void Main(string[] args)
