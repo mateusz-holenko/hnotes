@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.IdentityModel.Tokens;
 
 public static class UsersService
@@ -30,9 +31,11 @@ public static class UsersService
         new User(800, "Guest")
     };
 
-    private class UsersDbContext : DbContext
+    public class UsersDbContext : DbContext
     {
         public UsersDbContext(DbContextOptions<UsersDbContext> options) : base(options) {}
+
+        public DbSet<User> Users { get; set; }
     }
 
     public static void Main(string[] args)
@@ -46,9 +49,17 @@ public static class UsersService
 
         var app = builder.Build();
 
-        app.MapPost("/users/login", (UserCredentials credentials) =>
+        using(var scope = app.Services.CreateScope())
         {
-           var user = users.FirstOrDefault(x => x.Username == credentials.username);
+            var dbc = scope.ServiceProvider.GetService<UsersDbContext>();
+
+            dbc.Users.Add(new User(100, "admin"));
+            dbc.SaveChanges();
+        }
+
+        app.MapPost("/users/login", (UserCredentials credentials, UsersDbContext db) =>
+        {
+           var user = db.Users.FirstOrDefault(x => x.Username == credentials.username);
            if(user == null) {
               return Results.BadRequest($"User '{credentials.username}' not found or provided bad credentials");
            }

@@ -6,6 +6,8 @@ in
 pkgs.mkShellNoCC {
   packages = with pkgs; [
     dotnet-sdk_9
+    dotnet-runtime_9
+    dotnet-ef
     netcoredbg
     omnisharp-roslyn
   ];
