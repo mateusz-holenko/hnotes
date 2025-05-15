@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 public static class UsersService
@@ -29,10 +30,19 @@ public static class UsersService
     new User(800, "Guest")
   };
 
+  private class UsersDbContext : DbContext
+  {
+  }
+
   public static void Main(string[] args)
   {
     var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddControllers();
+
+    var dbConnectionString = "server=localhost;user=houen;password=houen;database=usersdatabase";
+    builder.Services.AddDbContext<UsersDbContext>(options => options
+      .UseMySql(dbConnectionString, new MariaDbServerVersion("11.7.2")));
+
     var app = builder.Build();
 
     app.MapPost("/users/login", (UserCredentials credentials) =>
