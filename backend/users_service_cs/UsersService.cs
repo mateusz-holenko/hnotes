@@ -66,7 +66,7 @@ public static class UsersService
         app.MapPost("/users/login", (UserCredentials credentials, UsersDbContext db) =>
         {
            var user = db.Users.FirstOrDefault(x => x.Username == credentials.username);
-           if(user == null) {
+           if(user == null || credentials.username != credentials.password) {
               return Results.BadRequest($"User '{credentials.username}' not found or provided bad credentials");
            }
 
