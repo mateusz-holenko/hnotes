@@ -53,7 +53,13 @@ public static class UsersService
         {
             var dbc = scope.ServiceProvider.GetService<UsersDbContext>();
 
-            dbc.Users.Add(new User(100, "admin"));
+            foreach(var user in users)
+            {
+                if(!dbc.Users.Contains(user))
+                {
+                    dbc.Users.Add(user);
+                }
+            }
             dbc.SaveChanges();
         }
 
