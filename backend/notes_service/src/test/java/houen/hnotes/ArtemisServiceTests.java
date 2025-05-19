@@ -1,6 +1,9 @@
 package houen.hnotes;
 
-import java.util.ArrayList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import org.apache.activemq.artemis.jms.client.ActiveMQTextMessage;
 import org.json.JSONObject;
@@ -14,24 +17,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.system.CapturedOutput;
 import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.jms.support.destination.JmsDestinationAccessor;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Metrics;
-
-import static org.assertj.core.api.Assertions.*;
-import static org.awaitility.Awaitility.*;
-
 
 @SpringBootTest
 @ExtendWith(OutputCaptureExtension.class)
-@AutoConfigureTestDatabase
 public class ArtemisServiceTests {
 
   private static Logger logger = LoggerFactory.getLogger(ArtemisServiceTests.class);
@@ -39,7 +34,7 @@ public class ArtemisServiceTests {
   @MockitoBean
   private ElasticSearchService searchService;
 
-  @Autowired
+  @MockitoBean
   private NotesStore notesStore;
 
   @Autowired
@@ -53,8 +48,11 @@ public class ArtemisServiceTests {
   private MeterRegistry meterRegistry;
 
   @BeforeEach
-  private void initEach(TestInfo testInfo) {
-    notesStore.clear();
+  private void initEach(TestInfo testInfo) throws Exception {
+    // TODO: this shouldn't be here; eliminate pls
+    var f = artemisService.getClass().getDeclaredField("notesStore");
+    f.setAccessible(true);
+    f.set(artemisService, notesStore);
 
     logger.info("--- Starting test: {} ---", testInfo.getDisplayName());
   }
@@ -62,7 +60,7 @@ public class ArtemisServiceTests {
   @Test
   @Timeout(1)
   public void sendMessageToQueue_ShouldWork() throws Exception {
-    artemisService.send(new NoteVerificationRequest(0, "title", "content"));
+    artemisService.send(new NoteVerificationRequest("0", "title", "content"));
     var message = jmsTemplate.receive("verification.queue");
 
     Assertions.assertNotNull(message);
@@ -76,7 +74,7 @@ public class ArtemisServiceTests {
 
   @Test
   public void receiveMessage_WithProperContent_ShouldWork(CapturedOutput output) throws Exception {
-    jmsTemplate.convertAndSend("verification-result.queue", new NoteVerificationResult(0, "accepted").toJSONString());
+    jmsTemplate.convertAndSend("verification-result.queue", new NoteVerificationResult("0", "accepted").toJSONString());
     await().untilAsserted(() -> assertThat(output).contains("Accepting note #0"));
   }
 
@@ -94,60 +92,19 @@ public class ArtemisServiceTests {
 
   @Test
   public void receiveMessage_WithProperContent_ShouldAcceptNote(CapturedOutput output) throws Exception {
-    notesStore.addNote(new Note("title", "content"));
-
-    var currentNotes = new ArrayList<Note>();
-    notesStore.getNotes(null, 100, 0, "").forEach(currentNotes::add);
-
-    Assertions.assertEquals(1, currentNotes.size());
-
-    var retrievedNote = currentNotes.get(0);
-    final Integer retrievedNoteId = retrievedNote.getId();
-
-    Assertions.assertEquals("title", retrievedNote.getTitle());
-    Assertions.assertEquals("content", retrievedNote.getContent());
-    Assertions.assertEquals(NoteStatus.UNVERIFIED, retrievedNote.getStatus());
-
-    jmsTemplate.convertAndSend("verification-result.queue", new NoteVerificationResult(retrievedNoteId, "accepted").toJSONString());
+    jmsTemplate.convertAndSend("verification-result.queue", new NoteVerificationResult("accepted_note_id", "accepted").toJSONString());
     await().untilAsserted(() -> assertThat(meterRegistry.counter("artemis.messagesProcessed").count()).isEqualTo(1));
-    
-    currentNotes.clear();
-    notesStore.getNotes(null, 100, 0, "").forEach(currentNotes::add);
 
-    Assertions.assertEquals(1, currentNotes.size());
-
-    retrievedNote = currentNotes.get(0);
-    Assertions.assertEquals("title", retrievedNote.getTitle());
-    Assertions.assertEquals("content", retrievedNote.getContent());
-    Assertions.assertEquals(NoteStatus.ACCEPTED, retrievedNote.getStatus());
+    verify(notesStore, times(1)).acceptNote("accepted_note_id");
+    verify(notesStore, times(0)).rejectNote("accepted_note_id");
   }
 
   @Test
   public void receiveMessage_WithBlockedContent_ShouldRejectNote(CapturedOutput output) throws Exception {
-    notesStore.addNote(new Note("title", "content"));
-
-    var currentNotes = new ArrayList<Note>();
-    notesStore.getNotes(null, 100, 0, "").forEach(currentNotes::add);
-
-    Assertions.assertEquals(1, currentNotes.size());
-
-    var retrievedNote = currentNotes.get(0);
-    var retrievedNoteId = retrievedNote.getId();
-    Assertions.assertEquals("title", retrievedNote.getTitle());
-    Assertions.assertEquals("content", retrievedNote.getContent());
-    Assertions.assertEquals(NoteStatus.UNVERIFIED, retrievedNote.getStatus());
-
-    jmsTemplate.convertAndSend("verification-result.queue", new NoteVerificationResult(retrievedNoteId, "rejected").toJSONString());
+    jmsTemplate.convertAndSend("verification-result.queue", new NoteVerificationResult("rejected_note_id", "rejected").toJSONString());
     await().untilAsserted(() -> assertThat(meterRegistry.counter("artemis.messagesProcessed").count()).isEqualTo(1));
 
-    currentNotes.clear();
-    notesStore.getNotes(null, 100, 0, "").forEach(currentNotes::add);
-
-    Assertions.assertEquals(1, currentNotes.size());
-
-    retrievedNote = currentNotes.get(0);
-    Assertions.assertEquals("title", retrievedNote.getTitle());
-    Assertions.assertEquals("content", retrievedNote.getContent());
-    Assertions.assertEquals(NoteStatus.REJECTED, retrievedNote.getStatus());
+    verify(notesStore, times(0)).acceptNote("rejected_note_id");
+    verify(notesStore, times(1)).rejectNote("rejected_note_id");
   }
 }

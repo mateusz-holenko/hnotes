@@ -2,17 +2,12 @@ package houen.hnotes;
 
 import java.time.Instant;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 
-@Entity
 public class Note {
   @Id
-  @GeneratedValue(strategy=GenerationType.AUTO)
   private String id;
 
   private String title;

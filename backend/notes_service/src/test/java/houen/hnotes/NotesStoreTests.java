@@ -1,23 +1,21 @@
 package houen.hnotes;
 
+import static org.mockito.Mockito.when;
+
 import java.util.ArrayList;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.transaction.annotation.Transactional;
 
-import static org.mockito.Mockito.when;
-
-@SpringBootTest
-@AutoConfigureTestDatabase
-@AutoConfigureTestEntityManager
-@Transactional
+@DataMongoTest
+@EnableMongoRepositories
+@ComponentScan(basePackages = {"houen.hnotes"}, resourcePattern="NotesStore.class")
 public class NotesStoreTests {
 
   @Autowired
@@ -29,37 +27,43 @@ public class NotesStoreTests {
   @MockitoBean
   private ElasticSearchService searchService;
 
-  @Autowired
-  private TestEntityManager entityManager;
+  @MockitoBean
+  private StatusService statusService;
 
   @Test
-  public void testGettingNotes() throws Exception {
-    notesStore.createDummyNotes();
-    var notes = new ArrayList<Note>();
-    notesStore.getNotes(null, 3, 1, "").forEach(notes::add);
+  @DirtiesContext
+  public void newNote_ShouldBeUnverified() throws Exception {
+    notesStore.addNote(new Note("title", "content"));
 
-    Assertions.assertEquals(3, notes.size());
+    var currentNotes = new ArrayList<Note>();
+    notesStore.getNotes(null, 100, 0, "").forEach(currentNotes::add);
+
+    Assertions.assertEquals(1, currentNotes.size());
+
+    var retrievedNote = currentNotes.get(0);
+    Assertions.assertEquals("title", retrievedNote.getTitle());
+    Assertions.assertEquals("content", retrievedNote.getContent());
+    Assertions.assertEquals(NoteStatus.UNVERIFIED, retrievedNote.getStatus());
   }
 
   @Test
+  @DirtiesContext
   public void search_ShouldWork() throws Exception {
-    entityManager.persist(new Note("First note", "Like a butterfly"));
-    entityManager.persist(new Note("Second note", "Like a dragon"));
-    entityManager.persist(new Note("Third note", "And another butterfly"));
+    var noteId0 = notesStore.addNote(new Note("First note", "Like a butterfly")).id();
+    notesStore.addNote(new Note("Second note", "Like a dragon"));
+    var noteId1 = notesStore.addNote(new Note("Third note", "And another butterfly")).id();
 
     when(searchService.searchNotes("butterfly"))
-      .thenReturn(new Integer[] { 1, 3 });
+      .thenReturn(new String[] { noteId0, noteId1 });
 
     var notes = new ArrayList<Note>();
     notesStore.getNotes(null, 10, 0, "butterfly").forEach(notes::add);
 
     Assertions.assertEquals(2, notes.size());
-    // TODO: the ordering is off here; I would expect the 'third note' to be returned first!
 
-    Assertions.assertEquals("First note", notes.get(0).getTitle());
-    Assertions.assertEquals("Like a butterfly", notes.get(0).getContent());
-
-    Assertions.assertEquals("Third note", notes.get(1).getTitle());
-    Assertions.assertEquals("And another butterfly", notes.get(1).getContent());
+    Assertions.assertEquals("Third note", notes.get(0).getTitle());
+    Assertions.assertEquals("And another butterfly", notes.get(0).getContent());
+    Assertions.assertEquals("First note", notes.get(1).getTitle());
+    Assertions.assertEquals("Like a butterfly", notes.get(1).getContent());
   }
 }
