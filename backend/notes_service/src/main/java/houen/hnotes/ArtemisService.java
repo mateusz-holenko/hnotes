@@ -24,10 +24,7 @@ public class ArtemisService {
   private static final String VerificationResultQueueName = "verification-result.queue";
 
   private final JmsTemplate brokerTemplate;
-
-  @Autowired
-  @Lazy
-  private NotesStore notesStore;
+  private final NotesStore notesStore;
 
   private final Logger logger;
 
@@ -36,8 +33,9 @@ public class ArtemisService {
   private final Counter errorsCounter;
 
   @Autowired
-  public ArtemisService(@Qualifier("verificationJmsTemplate") JmsTemplate jmsTemplate, MeterRegistry meterRegistry) {
+  public ArtemisService(@Qualifier("verificationJmsTemplate") JmsTemplate jmsTemplate, @Lazy NotesStore notesStore, MeterRegistry meterRegistry) {
     this.brokerTemplate = jmsTemplate;
+    this.notesStore = notesStore;
 
     logger = LoggerFactory.getLogger(NotesRestController.class);
 
