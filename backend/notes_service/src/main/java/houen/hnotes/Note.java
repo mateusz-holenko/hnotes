@@ -15,7 +15,7 @@ import org.hibernate.annotations.SourceType;
 public class Note {
   @Id
   @GeneratedValue(strategy=GenerationType.AUTO)
-  private Integer id;
+  private String id;
 
   private String title;
 
@@ -39,7 +39,7 @@ public class Note {
     this.content = content;
   }
 
-  public Integer getId() {
+  public String getId() {
     return this.id;
   }
 
@@ -59,7 +59,7 @@ public class Note {
     this.content = content;
   }
 
-  public void setId(Integer id) {
+  public void setId(String id) {
     this.id = id;
   }
 

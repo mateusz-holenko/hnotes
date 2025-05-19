@@ -42,14 +42,14 @@ public class NotesRestController {
     }
 
     @PutMapping("/notes/{id}")
-    public EditedNoteResult editNote(@PathVariable("id") int id, @RequestBody Note n) throws Exception {
+    public EditedNoteResult editNote(@PathVariable("id") String id, @RequestBody Note n) throws Exception {
       options.waitOnUpdate();
       n.setId(id);
       return notesStore.editNote(n);
     }
 
     @DeleteMapping("/notes/{id}")
-    public void deleteNote(@PathVariable("id") int id) {
+    public void deleteNote(@PathVariable("id") String id) {
       options.waitOnRemove();
       notesStore.deleteNote(id);
     }

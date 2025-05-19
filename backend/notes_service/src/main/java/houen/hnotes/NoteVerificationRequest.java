@@ -4,19 +4,19 @@ import java.io.Serializable;
 
 public class NoteVerificationRequest implements Serializable {
 
-  private Integer id;
+  private String id;
   private String title;
   private String content;
 
   public NoteVerificationRequest() {}
 
-  public NoteVerificationRequest(Integer id, String title, String content) {
+  public NoteVerificationRequest(String id, String title, String content) {
     this.id = id;
     this.title = title;
     this.content = content;
   }
 
-  public Integer getId() {
+  public String getId() {
     return id;
   }
 

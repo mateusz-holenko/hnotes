@@ -46,7 +46,7 @@ public class ElasticSearchService {
   }
 
   @CircuitBreaker(name = "rest-service")
-  public Integer[] searchNotes(String content) throws Exception {
+  public String[] searchNotes(String content) throws Exception {
     var query = new JSONObject()
       .put("query", new JSONObject()
         .put("bool", new JSONObject()
@@ -69,11 +69,10 @@ public class ElasticSearchService {
     var json = new JSONObject(str);
     var hits = json.getJSONObject("hits").getJSONArray("hits");
 
-    var links = new ArrayList<Integer>();
+    var links = new ArrayList<String>();
     for(int i = 0; i < hits.length(); i++) {
-      Integer id = Integer.parseInt(hits.getJSONObject(i).getString("_id"));
-      links.add(id);
+      links.add(hits.getJSONObject(i).getString("_id"));
     }
-    return links.toArray(new Integer[links.size()]);
+    return links.toArray(new String[links.size()]);
   }
 }

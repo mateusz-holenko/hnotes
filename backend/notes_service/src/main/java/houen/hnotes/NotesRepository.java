@@ -7,5 +7,5 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 
 public interface NotesRepository extends CrudRepository<Note, Integer>, PagingAndSortingRepository<Note, Integer>
 {
-  Page<Note> findByIdIn(Integer[] ids, Pageable page);
+  Page<Note> findByIdIn(String[] ids, Pageable page);
 }

@@ -4,35 +4,35 @@ import java.io.Serializable;
 
 public class StatusUpdate implements Serializable {
 
-  public static StatusUpdate NoteAccepted(Integer id) {
+  public static StatusUpdate NoteAccepted(String id) {
     return new StatusUpdate("note", id, "accepted");
   }
 
-  public static StatusUpdate NoteRejected(Integer id) {
+  public static StatusUpdate NoteRejected(String id) {
     return new StatusUpdate("note", id, "rejected");
   }
 
-  public static StatusUpdate NoteCreated(Integer id) {
+  public static StatusUpdate NoteCreated(String id) {
     return new StatusUpdate("note", id, "created");
   }
 
-  public static StatusUpdate NoteUpdated(Integer id) {
+  public static StatusUpdate NoteUpdated(String id) {
     return new StatusUpdate("note", id, "updated");
   }
 
-  public static StatusUpdate NoteDeleted(Integer id) {
+  public static StatusUpdate NoteDeleted(String id) {
     return new StatusUpdate("note", id, "deleted");
   }
 
   private final String context;
-  private final Integer identifier;
+  private final String identifier;
   private final String action;
 
   public String getContext() {
     return context;
   }
 
-  public Integer getIdentifier() {
+  public String getIdentifier() {
     return identifier;
   }
 
@@ -40,7 +40,7 @@ public class StatusUpdate implements Serializable {
     return action;
   }
 
-  private StatusUpdate(String context, Integer identifier, String action) {
+  private StatusUpdate(String context, String identifier, String action) {
     this.context = context;
     this.identifier = identifier;
     this.action = action;

@@ -2,5 +2,5 @@ package houen.hnotes;
 
 import java.time.Instant;
 
-public record NewNoteResult(Integer id, Instant creationTimestamp) {};
+public record NewNoteResult(String id, Instant creationTimestamp) {};
 

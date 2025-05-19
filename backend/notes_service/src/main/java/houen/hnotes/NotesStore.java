@@ -43,7 +43,7 @@ public class NotesStore {
       }
     }
 
-    public boolean acceptNote(Integer noteId) {
+    public boolean acceptNote(String noteId) {
       if(!setNoteStatus(noteId, NoteStatus.ACCEPTED)) {
         return false;
       }
@@ -52,7 +52,7 @@ public class NotesStore {
       return true;
     }
 
-    public boolean rejectNote(Integer noteId) {
+    public boolean rejectNote(String noteId) {
       if(!setNoteStatus(noteId, NoteStatus.REJECTED)) {
         return false;
       }
@@ -61,7 +61,7 @@ public class NotesStore {
       return true;
     }
 
-    private boolean setNoteStatus(Integer noteId, NoteStatus status) {
+    private boolean setNoteStatus(String noteId, NoteStatus status) {
       var noteOption = notesRepository.findById(noteId);
       if(noteOption.isEmpty()) {
         return false;
@@ -111,7 +111,7 @@ public class NotesStore {
       return new EditedNoteResult(n.getLastModificationTimestamp());
     }
 
-    public void deleteNote(int id) {
+    public void deleteNote(String id) {
       ensureNoteExists(id);
 
       notesRepository.deleteById(id);
@@ -119,7 +119,7 @@ public class NotesStore {
       // TODO: remove from elastic search index
     }
 
-    private void ensureNoteExists(int id) {
+    private void ensureNoteExists(String id) {
       var present = notesRepository.existsById(id);
       if(!present) {
         throw new IllegalArgumentException(String.format("Note %d not found", id));

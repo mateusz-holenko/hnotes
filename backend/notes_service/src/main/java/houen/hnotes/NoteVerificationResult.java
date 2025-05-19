@@ -10,17 +10,17 @@ public class NoteVerificationResult implements Serializable {
 
   private static ObjectMapper objectMapper = new ObjectMapper();
 
-  private Integer id;
+  private String id;
   private String result;
 
   public NoteVerificationResult() {}
 
-  public NoteVerificationResult(Integer id, String result) {
+  public NoteVerificationResult(String id, String result) {
     this.id = id;
     this.result = result;
   }
 
-  public Integer getId() {
+  public String getId() {
     return id;
   }
 
