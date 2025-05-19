@@ -6,10 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.annotations.SourceType;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
 public class Note {
@@ -23,10 +21,10 @@ public class Note {
 
   private NoteStatus status;
 
-  @CreationTimestamp(source = SourceType.DB)
+  @CreatedDate
   private Instant creationTimestamp;
 
-  @UpdateTimestamp(source = SourceType.DB)
+  @LastModifiedDate
   private Instant lastModificationTimestamp;
 
   public Note() {
