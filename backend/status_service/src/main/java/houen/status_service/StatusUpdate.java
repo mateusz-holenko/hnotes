@@ -2,12 +2,12 @@ package houen.status_service;
 
 public class StatusUpdate {
   private String context;
-  private Integer identifier;
+  private String identifier;
   private String action;
 
   public StatusUpdate() {}
 
-  public StatusUpdate(String context, Integer identifier, String action) {
+  public StatusUpdate(String context, String identifier, String action) {
     this.context = context;
     this.identifier = identifier;
     this.action = action;
@@ -17,7 +17,7 @@ public class StatusUpdate {
     return context;
   }
 
-  public Integer getIdentifier() {
+  public String getIdentifier() {
     return identifier;
   }
 
