@@ -1,6 +1,7 @@
 #!/bin/sh
 
-export DB_NAME=notesdatabase
+# TODO: fix db_username
+export DB_NAME=admin
 export DB_USERNAME=houen
 export DB_PASSWORD=houen
 export DB_HOST=${MONGODB_SERVICE_SERVICE_HOST}

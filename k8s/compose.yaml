@@ -64,15 +64,16 @@ services:
     ports:
       - 27017:27017
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_ROOT_USERNAME: houen
+      MONGO_INITDB_ROOT_PASSWORD: houen
+      MONGO_INITDB_DATABASE: notesdatabase
   mongo-express:
     image: mongo-express:latest
     ports:
       - 8081:8081
     environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: root
-      ME_CONFIG_MONGODB_URL: mongodb://root:root@mongodb:27017/
+      ME_CONFIG_MONGODB_ADMINUSERNAME: houen
+      ME_CONFIG_MONGODB_ADMINPASSWORD: houen
+      ME_CONFIG_MONGODB_URL: mongodb://houen:houen@mongodb:27017/
       ME_CONFIG_BASICAUTH: false
 
