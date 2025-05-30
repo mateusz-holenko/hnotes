@@ -36,6 +36,7 @@ public static class UsersService
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        builder.Services.AddOpenApi();
         builder.Services.AddControllers();
 
         var dbConnectionString = "server=localhost;user=houen;password=houen;database=usersdatabase";
@@ -58,6 +59,7 @@ public static class UsersService
             dbc.SaveChanges();
         }
 
+        app.MapOpenApi();
         app.MapControllers();
         app.Run();
     }
