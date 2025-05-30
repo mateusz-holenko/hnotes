@@ -1,9 +1,4 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.IdentityModel.Tokens;
 
 public class UsersDbContext : DbContext
 {
@@ -62,28 +57,6 @@ public static class UsersService
             }
             dbc.SaveChanges();
         }
-
-        app.MapPost("/users/login", (UserCredentials credentials, UsersDbContext db) =>
-        {
-           var user = db.Users.FirstOrDefault(x => x.Username == credentials.username);
-           if(user == null || credentials.username != credentials.password) {
-              return Results.BadRequest($"User '{credentials.username}' not found or provided bad credentials");
-           }
-
-           var currentTimestamp = DateTime.UtcNow;
-           var jwtToken = new JwtSecurityToken(
-               notBefore: currentTimestamp,
-               expires: currentTimestamp.AddHours(1),
-               claims: new List<Claim> { new Claim(ClaimTypes.Name, user.Id.ToString()) },
-               signingCredentials: new SigningCredentials(
-                   new SymmetricSecurityKey(Encoding.UTF8.GetBytes("mysecretkeythatislongenoughforthehashingalgorithmmysecretkeythan")),
-                   SecurityAlgorithms.HmacSha512Signature));
-
-           return Results.Ok(new Dictionary<string, string> {
-               { "username", user.Username },
-               { "jwt", new JwtSecurityTokenHandler().WriteToken(jwtToken) }
-           });
-        });
 
         app.MapControllers();
         app.Run();
