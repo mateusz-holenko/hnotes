@@ -5,38 +5,38 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.IdentityModel.Tokens;
 
+public class UsersDbContext : DbContext
+{
+    public UsersDbContext(DbContextOptions<UsersDbContext> options) : base(options) {}
+
+    public DbSet<User> Users { get; set; }
+}
+
+public class User
+{
+    public User(int id, string username)
+    {
+        Id = id;
+        Username = username;
+    }
+
+    public int Id { get; set; }
+    public string Username { get; set; }
+}
+
+public class UserCredentials
+{
+    public string? username { get; set; }
+    public string? password { get; set; }
+}
+
 public static class UsersService
 {
-    public class User
-    {
-        public User(int id, string username)
-        {
-            Id = id;
-            Username = username;
-        }
-
-        public int Id { get; set; }
-        public string Username { get; set; }
-    }
-
-    private class UserCredentials
-    {
-        public string? username { get; set; }
-        public string? password { get; set; }
-    }
-
     private static List<User> users = new List<User>() {
         new User(100, "admin"),
         new User(101, "User1"),
         new User(800, "Guest")
     };
-
-    public class UsersDbContext : DbContext
-    {
-        public UsersDbContext(DbContextOptions<UsersDbContext> options) : base(options) {}
-
-        public DbSet<User> Users { get; set; }
-    }
 
     public static void Main(string[] args)
     {
